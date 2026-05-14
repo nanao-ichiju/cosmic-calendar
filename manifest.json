@@ -1,0 +1,16 @@
+{
+  "name": "宇宙暦カレンダー",
+  "short_name": "宇宙暦",
+  "description": "月の満ち欠け・吉凶日・マヤ暦・ライオンズゲートを統合した宇宙暦カレンダー",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#06090f",
+  "theme_color": "#06090f",
+  "orientation": "portrait",
+  "lang": "ja",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ],
+  "categories": ["lifestyle", "utilities"],
+  "screenshots": []
+}

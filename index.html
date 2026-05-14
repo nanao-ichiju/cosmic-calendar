@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="宇宙暦">
+<meta name="theme-color" content="#06090f">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
+<title>宇宙暦カレンダー</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;600&family=Noto+Sans+JP:wght@200;300;400&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06090f;--bg2:#0b1018;--bg3:#101825;
+  --gold:#c8a84b;--gold-l:#e8d080;--gold-d:#7a6428;
+  --silver:#a0b0c4;--moon:#f2eada;--text:#ccc8be;--dim:#606878;
+  --red:#c05050;--red-l:#e89090;--green:#4a9468;--green-l:#80c898;
+  --blue:#4a6ab8;--blue-l:#88a8e0;--purple:#7858a8;--purple-l:#b090d8;
+  --r:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow-x:hidden;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;font-weight:300;font-size:14px;}
+
+/* ── 星空 ── */
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+/* ── ページ管理 ── */
+.page{display:none;position:relative;z-index:1;max-width:430px;margin:0 auto;padding-bottom:88px;}
+.page.active{display:block;}
+
+/* ── ヘッダー ── */
+.hdr{padding:20px 18px 10px;text-align:center;}
+.hdr-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:5px;color:var(--gold-d);margin-bottom:6px;}
+.month-nav{display:flex;align-items:center;justify-content:center;gap:20px;}
+.nav-btn{background:none;border:1px solid rgba(200,168,75,.25);color:var(--gold);width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;}
+.nav-btn:active{background:rgba(200,168,75,.15);}
+.month-txt .m{font-family:'Cinzel',serif;font-size:26px;color:var(--moon);letter-spacing:1px;}
+.month-txt .y{font-size:11px;color:var(--dim);letter-spacing:3px;margin-top:1px;}
+
+/* ── バナー ── */
+.banner{margin:8px 14px;background:linear-gradient(135deg,rgba(16,24,37,.95),rgba(10,16,24,.95));border:1px solid rgba(200,168,75,.2);border-radius:var(--r);padding:14px 16px;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden;}
+.banner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(200,168,75,.06) 0%,transparent 70%);}
+.banner-icon{font-size:42px;filter:drop-shadow(0 0 12px rgba(242,234,218,.3));z-index:1;}
+.banner-info{z-index:1;}
+.banner-info h3{font-family:'Cinzel',serif;font-size:15px;color:var(--moon);font-weight:400;}
+.banner-info p{font-size:11px;color:var(--dim);margin-top:3px;line-height:1.5;}
+.banner-age{margin-left:auto;text-align:right;z-index:1;}
+.banner-age .n{font-family:'Cinzel',serif;font-size:30px;color:var(--gold);line-height:1;}
+.banner-age .u{font-size:10px;color:var(--dim);}
+
+/* ── ゲート帯 ── */
+.gate-banner{margin:6px 14px;border-radius:var(--r);padding:10px 16px;display:flex;align-items:center;gap:10px;font-size:12px;}
+.gate-banner.lions{background:linear-gradient(90deg,rgba(120,88,168,.25),rgba(200,168,75,.15));border:1px solid rgba(120,88,168,.4);}
+.gate-banner.bulls{background:linear-gradient(90deg,rgba(74,106,184,.25),rgba(74,148,104,.15));border:1px solid rgba(74,106,184,.4);}
+.gate-icon{font-size:20px;}
+.gate-info b{color:var(--moon);font-weight:400;}
+.gate-info span{color:var(--dim);font-size:10px;display:block;margin-top:1px;}
+
+/* ── カレンダー ── */
+.cal-wrap{margin:10px 14px;background:rgba(11,16,24,.7);border:1px solid rgba(200,168,75,.12);border-radius:var(--r);overflow:hidden;}
+.wday{display:grid;grid-template-columns:repeat(7,1fr);background:rgba(6,9,15,.8);padding:7px 0 5px;}
+.wday span{text-align:center;font-size:10px;letter-spacing:.5px;color:var(--dim);}
+.wday span:first-child{color:rgba(192,80,80,.7);}
+.wday span:last-child{color:rgba(74,106,184,.7);}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);padding:4px 2px 6px;row-gap:2px;}
+.dc{position:relative;display:flex;flex-direction:column;align-items:center;padding:3px 1px 4px;min-height:58px;cursor:pointer;border-radius:10px;transition:.15s;}
+.dc:active{background:rgba(200,168,75,.1);}
+.dc.empty{pointer-events:none;}
+.dc.gate-day::after{content:'';position:absolute;inset:0;border-radius:10px;background:linear-gradient(180deg,rgba(120,88,168,.12),transparent);pointer-events:none;}
+.dc.peak-day{border:1px solid rgba(200,168,75,.35);}
+.dc .dn{font-family:'Cinzel',serif;font-size:15px;width:27px;height:27px;display:flex;align-items:center;justify-content:center;color:var(--text);border-radius:50%;}
+.dc:nth-child(7n+1) .dn{color:#c07878;}
+.dc:nth-child(7n) .dn{color:#7890c8;}
+.dc.today .dn{background:var(--gold);color:var(--bg);font-weight:600;}
+.dc.selected{background:rgba(200,168,75,.1);}
+.dc.selected .dn{color:var(--gold);}
+.moon-sm{font-size:13px;line-height:1;margin-top:1px;}
+.moon-sm.dim{font-size:8px;color:rgba(200,200,180,.2);}
+.tags{display:flex;flex-wrap:wrap;justify-content:center;gap:1px;margin-top:2px;}
+.tg{font-size:7px;padding:1px 3px;border-radius:3px;letter-spacing:.3px;white-space:nowrap;}
+.tg-g{background:rgba(200,168,75,.18);color:var(--gold-l);}
+.tg-r{background:rgba(192,80,80,.18);color:var(--red-l);}
+.tg-gr{background:rgba(74,148,104,.18);color:var(--green-l);}
+.tg-b{background:rgba(74,106,184,.18);color:var(--blue-l);}
+.tg-p{background:rgba(120,88,168,.18);color:var(--purple-l);}
+
+/* ── 詳細パネル ── */
+.panel{margin:10px 14px;background:linear-gradient(160deg,rgba(12,18,28,.95),rgba(8,12,18,.95));border:1px solid rgba(200,168,75,.18);border-radius:var(--r);overflow:hidden;}
+.panel-head{padding:14px 16px 10px;border-bottom:1px solid rgba(200,168,75,.1);display:flex;align-items:center;gap:12px;}
+.panel-date{font-family:'Cinzel',serif;font-size:28px;color:var(--moon);line-height:1;}
+.panel-date-sub{font-size:11px;color:var(--dim);margin-top:2px;}
+.panel-moon{font-size:32px;filter:drop-shadow(0 0 8px rgba(242,234,218,.25));}
+.panel-moon-info{margin-left:auto;text-align:right;}
+.panel-moon-info .mn{font-family:'Cinzel',serif;font-size:14px;color:var(--moon);}
+.panel-moon-info .ma{font-size:11px;color:var(--dim);margin-top:2px;}
+.psec{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.04);}
+.psec:last-child{border-bottom:none;}
+.psec-label{font-size:9px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:8px;}
+.day-cards{display:flex;flex-direction:column;gap:8px;}
+.day-card{border-radius:12px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start;}
+.day-card.good{background:rgba(200,168,75,.08);border:1px solid rgba(200,168,75,.2);}
+.day-card.caution{background:rgba(192,80,80,.07);border:1px solid rgba(192,80,80,.2);}
+.day-card.neutral{background:rgba(96,104,120,.08);border:1px solid rgba(96,104,120,.15);}
+.day-card.gate{background:rgba(120,88,168,.1);border:1px solid rgba(120,88,168,.3);}
+.day-card.astro{background:rgba(74,106,184,.08);border:1px solid rgba(74,106,184,.2);}
+.day-card.personal{background:rgba(74,148,104,.08);border:1px solid rgba(74,148,104,.25);}
+.dc-icon{font-size:22px;flex-shrink:0;margin-top:1px;}
+.dc-name{font-size:13px;color:var(--moon);font-weight:400;margin-bottom:4px;}
+.dc-desc{font-size:11px;color:var(--dim);line-height:1.6;margin-bottom:6px;}
+.dc-actions{display:flex;flex-direction:column;gap:4px;}
+.dc-do,.dc-dont{font-size:10px;padding:4px 8px;border-radius:6px;display:flex;align-items:flex-start;gap:5px;line-height:1.5;}
+.dc-do{background:rgba(74,148,104,.12);color:var(--green-l);}
+.dc-dont{background:rgba(192,80,80,.1);color:var(--red-l);}
+.dc-do::before{content:'✓';flex-shrink:0;font-weight:bold;}
+.dc-dont::before{content:'✗';flex-shrink:0;font-weight:bold;}
+.star-badge{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;text-align:center;line-height:1.3;border:1px solid rgba(200,168,75,.3);background:rgba(200,168,75,.08);color:var(--gold-l);font-family:'Cinzel',serif;flex-shrink:0;}
+.maya-row{display:flex;gap:10px;}
+.maya-card{flex:1;background:rgba(120,88,168,.08);border:1px solid rgba(120,88,168,.2);border-radius:10px;padding:10px;text-align:center;}
+.maya-card .mi{font-size:22px;margin-bottom:4px;}
+.maya-card .ml{font-size:9px;color:var(--dim);letter-spacing:1px;margin-bottom:3px;}
+.maya-card .mv{font-size:12px;color:var(--purple-l);}
+.full-moon-name{background:linear-gradient(135deg,rgba(242,234,218,.08),rgba(200,168,75,.05));border:1px solid rgba(242,234,218,.15);border-radius:10px;padding:10px 14px;text-align:center;}
+.full-moon-name .fn{font-family:'Cinzel',serif;font-size:16px;color:var(--moon);}
+.full-moon-name .fe{font-family:'IM Fell English',serif;font-style:italic;font-size:12px;color:var(--dim);margin-top:2px;}
+.full-moon-name .fd{font-size:11px;color:var(--text);margin-top:6px;line-height:1.6;}
+.flow-wrap{padding:0 16px 14px;}
+.flow-track{height:3px;background:rgba(255,255,255,.06);border-radius:2px;margin:8px 0;}
+.flow-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#1a3a6a,var(--gold));transition:.5s;}
+.flow-labels{display:flex;justify-content:space-between;}
+.fl{font-size:9px;color:var(--dim);text-align:center;}
+.fl.on{color:var(--gold);}
+
+/* ── 個人リーディングカード ── */
+.personal-card{background:linear-gradient(135deg,rgba(74,148,104,.1),rgba(120,88,168,.08));border:1px solid rgba(74,148,104,.25);border-radius:12px;padding:14px;margin-bottom:8px;}
+.personal-card .pc-title{font-family:'Cinzel',serif;font-size:13px;color:var(--green-l);margin-bottom:6px;}
+.personal-card .pc-body{font-size:11px;color:var(--text);line-height:1.7;}
+.compat-row{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
+.compat-badge{font-size:10px;padding:3px 8px;border-radius:20px;background:rgba(74,148,104,.15);color:var(--green-l);border:1px solid rgba(74,148,104,.2);}
+.compat-badge.warn{background:rgba(192,80,80,.12);color:var(--red-l);border-color:rgba(192,80,80,.2);}
+
+/* ── 設定ページ ── */
+.settings-page{padding:20px 14px;}
+.settings-title{font-family:'Cinzel',serif;font-size:18px;color:var(--moon);margin-bottom:4px;}
+.settings-sub{font-size:11px;color:var(--dim);margin-bottom:24px;line-height:1.5;}
+.form-section{margin-bottom:20px;}
+.form-section-title{font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:12px;}
+.form-group{margin-bottom:14px;}
+.form-label{font-size:11px;color:var(--dim);margin-bottom:6px;display:block;letter-spacing:1px;}
+.form-input{
+  width:100%;background:rgba(11,16,24,.8);border:1px solid rgba(200,168,75,.2);
+  border-radius:10px;padding:12px 14px;color:var(--moon);font-size:14px;
+  font-family:'Noto Sans JP',sans-serif;outline:none;
+  -webkit-appearance:none;appearance:none;
+  transition:.2s;
+}
+.form-input:focus{border-color:var(--gold);}
+.form-input option{background:#0b1018;color:var(--moon);}
+.save-btn{
+  width:100%;padding:14px;border-radius:12px;border:none;
+  background:linear-gradient(135deg,var(--gold-d),var(--gold));
+  color:var(--bg);font-size:15px;font-family:'Cinzel',serif;
+  letter-spacing:2px;cursor:pointer;transition:.2s;margin-top:8px;
+}
+.save-btn:active{opacity:.8;transform:scale(.98);}
+.profile-card{
+  background:linear-gradient(135deg,rgba(16,24,37,.95),rgba(10,16,24,.95));
+  border:1px solid rgba(200,168,75,.2);border-radius:var(--r);
+  padding:16px;margin-bottom:20px;
+}
+.profile-header{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
+.profile-avatar{width:52px;height:52px;border-radius:50%;background:rgba(200,168,75,.1);border:1px solid rgba(200,168,75,.3);display:flex;align-items:center;justify-content:center;font-size:24px;}
+.profile-name{font-family:'Cinzel',serif;font-size:18px;color:var(--moon);}
+.profile-date{font-size:11px;color:var(--dim);margin-top:2px;}
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.profile-item{background:rgba(8,12,20,.6);border:1px solid rgba(200,168,75,.1);border-radius:10px;padding:10px;}
+.profile-item .pi-label{font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:4px;}
+.profile-item .pi-val{font-size:13px;color:var(--moon);}
+.profile-item .pi-sub{font-size:10px;color:var(--dim);margin-top:2px;line-height:1.4;}
+
+/* ── ボトムナビ ── */
+.bnav{position:fixed;bottom:0;left:0;right:0;background:rgba(6,9,15,.96);border-top:1px solid rgba(200,168,75,.12);display:flex;justify-content:space-around;padding:10px 0 max(12px,env(safe-area-inset-bottom));backdrop-filter:blur(12px);z-index:100;}
+.ni{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--dim);font-size:9px;letter-spacing:1px;cursor:pointer;padding:2px 16px;border-radius:8px;}
+.ni.on{color:var(--gold);}
+.ni .ico{font-size:19px;}
+
+/* ── インストールバナー ── */
+.install-banner{
+  margin:6px 14px;border-radius:var(--r);padding:12px 16px;
+  background:linear-gradient(90deg,rgba(74,106,184,.2),rgba(120,88,168,.15));
+  border:1px solid rgba(74,106,184,.3);
+  display:flex;align-items:center;gap:12px;
+}
+.install-banner .ib-icon{font-size:22px;}
+.install-banner .ib-text b{font-size:12px;color:var(--moon);font-weight:400;}
+.install-banner .ib-text span{font-size:10px;color:var(--dim);display:block;margin-top:1px;}
+.install-banner .ib-btn{
+  margin-left:auto;background:var(--gold);color:var(--bg);
+  border:none;border-radius:8px;padding:6px 12px;font-size:11px;
+  font-family:'Cinzel',serif;cursor:pointer;white-space:nowrap;
+  flex-shrink:0;
+}
+
+/* ── トースト ── */
+.toast{
+  position:fixed;bottom:100px;left:50%;transform:translateX(-50%);
+  background:rgba(200,168,75,.9);color:var(--bg);
+  padding:10px 20px;border-radius:20px;font-size:12px;
+  z-index:200;opacity:0;transition:.3s;pointer-events:none;
+  white-space:nowrap;
+}
+.toast.show{opacity:1;}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+
+<!-- ページ: カレンダー -->
+<div class="page active" id="page-cal">
+  <div class="hdr">
+    <div class="hdr-eyebrow">✦ COSMIC CALENDAR ✦</div>
+    <div class="month-nav">
+      <button class="nav-btn" onclick="changeMonth(-1)">‹</button>
+      <div class="month-txt">
+        <div class="m" id="mLabel"></div>
+        <div class="y" id="yLabel"></div>
+      </div>
+      <button class="nav-btn" onclick="changeMonth(1)">›</button>
+    </div>
+  </div>
+  <div class="banner">
+    <div class="banner-icon" id="bIcon">🌕</div>
+    <div class="banner-info">
+      <h3 id="bName">満月</h3>
+      <p id="bDesc">フラワームーン</p>
+    </div>
+    <div class="banner-age">
+      <div class="n" id="bAge">14</div>
+      <div class="u">月齢</div>
+    </div>
+  </div>
+  <div id="installBanner"></div>
+  <div id="gateBanner"></div>
+  <div class="cal-wrap">
+    <div class="wday"><span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span></div>
+    <div class="grid" id="grid"></div>
+  </div>
+  <div class="panel" id="panel"></div>
+</div>
+
+<!-- ページ: 設定 -->
+<div class="page" id="page-settings">
+  <div class="settings-page">
+    <div class="settings-title">✦ My Profile</div>
+    <div class="settings-sub">誕生日を登録すると、その日のあなた個人への宇宙からのメッセージが届きます。</div>
+    <div id="profileDisplay"></div>
+    <div class="form-section">
+      <div class="form-section-title">基本情報</div>
+      <div class="form-group">
+        <label class="form-label">お名前（ニックネームでも）</label>
+        <input class="form-input" id="inputName" type="text" placeholder="例：七生" maxlength="20">
+      </div>
+      <div class="form-group">
+        <label class="form-label">生年月日</label>
+        <input class="form-input" id="inputBirth" type="date" min="1920-01-01" max="2010-12-31">
+      </div>
+      <div class="form-group">
+        <label class="form-label">生まれた時間帯（わかれば）</label>
+        <select class="form-input" id="inputTime">
+          <option value="">不明</option>
+          <option value="dawn">夜明け頃（4〜6時）</option>
+          <option value="morning">朝（6〜10時）</option>
+          <option value="noon">昼（10〜14時）</option>
+          <option value="afternoon">午後（14〜18時）</option>
+          <option value="evening">夕方〜夜（18〜22時）</option>
+          <option value="midnight">深夜（22〜4時）</option>
+        </select>
+      </div>
+    </div>
+    <button class="save-btn" onclick="saveProfile()">✦ 保存してリーディングを開始</button>
+  </div>
+</div>
+
+<!-- ボトムナビ -->
+<div class="bnav">
+  <div class="ni on" id="ni-cal" onclick="showPage('cal')"><span class="ico">🌙</span><span>暦</span></div>
+  <div class="ni" id="ni-today" onclick="goToday()"><span class="ico">✦</span><span>今日</span></div>
+  <div class="ni" id="ni-settings" onclick="showPage('settings')"><span class="ico">☽</span><span>マイ星座</span></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== 星空 =====
+const cv=document.getElementById('stars'),cx=cv.getContext('2d');
+let stars=[];
+function initStars(){
+  cv.width=window.innerWidth;cv.height=window.innerHeight;
+  stars=Array.from({length:140},()=>({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*1.3+.2,phase:Math.random()*Math.PI*2,speed:Math.random()*.004+.001}));
+}
+function drawStars(t){
+  cx.clearRect(0,0,cv.width,cv.height);
+  stars.forEach(s=>{const a=.2+.6*Math.sin(t*s.speed+s.phase);cx.beginPath();cx.arc(s.x,s.y,s.r,0,Math.PI*2);cx.fillStyle=`rgba(200,210,230,${a})`;cx.fill();});
+  requestAnimationFrame(drawStars);
+}
+initStars();requestAnimationFrame(drawStars);
+window.addEventListener('resize',initStars);
+
+// ===== PWA インストール =====
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();deferredPrompt=e;
+  document.getElementById('installBanner').innerHTML=`
+    <div class="install-banner">
+      <div class="ib-icon">📱</div>
+      <div class="ib-text"><b>ホーム画面に追加</b><span>アプリとして使えます</span></div>
+      <button class="ib-btn" onclick="installPWA()">追加</button>
+    </div>`;
+});
+function installPWA(){
+  if(!deferredPrompt)return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(r=>{
+    if(r.outcome==='accepted') showToast('✦ インストールしました！');
+    deferredPrompt=null;
+    document.getElementById('installBanner').innerHTML='';
+  });
+}
+
+// ===== Service Worker =====
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
+
+// ===== トースト =====
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// ===== ページ切り替え =====
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
+  document.getElementById('ni-'+id)?.classList.add('on');
+  if(id==='settings') renderProfileDisplay();
+}
+function goToday(){
+  const t=new Date();
+  vY=t.getFullYear();vM=t.getMonth()+1;selD=t.getDate();selY=vY;selM=vM;
+  showPage('cal');render();
+  setTimeout(()=>document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+}
+
+// ===== プロフィール =====
+function saveProfile(){
+  const name=document.getElementById('inputName').value.trim();
+  const birth=document.getElementById('inputBirth').value;
+  const time=document.getElementById('inputTime').value;
+  if(!name){showToast('お名前を入力してください');return;}
+  if(!birth){showToast('生年月日を入力してください');return;}
+  localStorage.setItem('cosmic_profile',JSON.stringify({name,birth,time}));
+  showToast(`✦ ${name}さんのプロフィールを保存しました`);
+  renderProfileDisplay();
+  setTimeout(()=>{showPage('cal');render();},1200);
+}
+function loadProfile(){
+  try{return JSON.parse(localStorage.getItem('cosmic_profile'));}catch{return null;}
+}
+function renderProfileDisplay(){
+  const p=loadProfile();
+  const el=document.getElementById('profileDisplay');
+  if(!p){el.innerHTML='';return;}
+  const bd=new Date(p.birth);
+  const ks=getKyuseiYear(bd);
+  const tz=getTzolkin(bd);
+  const mn=getMoonPhase(getMoonAge(bd));
+  el.innerHTML=`
+  <div class="profile-card">
+    <div class="profile-header">
+      <div class="profile-avatar">${mn.icon}</div>
+      <div>
+        <div class="profile-name">${p.name}</div>
+        <div class="profile-date">${p.birth} 生まれ</div>
+      </div>
+    </div>
+    <div class="profile-grid">
+      <div class="profile-item">
+        <div class="pi-label">本命星</div>
+        <div class="pi-val">${ks.name}</div>
+        <div class="pi-sub">${ks.desc}</div>
+      </div>
+      <div class="profile-item">
+        <div class="pi-label">生まれの月相</div>
+        <div class="pi-val">${mn.icon} ${mn.name}</div>
+        <div class="pi-sub">魂の原型</div>
+      </div>
+      <div class="profile-item">
+        <div class="pi-label">ツォルキン</div>
+        <div class="pi-val">${tz.seal}</div>
+        <div class="pi-sub">音${(tz.pos%13)+1}・${tz.tone}</div>
+      </div>
+      <div class="profile-item">
+        <div class="pi-label">誕生数</div>
+        <div class="pi-val">${getLifeNumber(p.birth)}</div>
+        <div class="pi-sub">数秘術ライフパス</div>
+      </div>
+    </div>
+  </div>`;
+  // フォームにも反映
+  document.getElementById('inputName').value=p.name;
+  document.getElementById('inputBirth').value=p.birth;
+  document.getElementById('inputTime').value=p.time||'';
+}
+
+// 数秘術ライフパス数
+function getLifeNumber(dateStr){
+  const digits=dateStr.replace(/-/g,'').split('').map(Number);
+  let sum=digits.reduce((a,b)=>a+b,0);
+  while(sum>9&&sum!==11&&sum!==22&&sum!==33) sum=[...String(sum)].map(Number).reduce((a,b)=>a+b,0);
+  return sum;
+}
+
+// 九星（年）
+function getKyuseiYear(dt){
+  const y=dt.getFullYear();
+  const idx=((((y-2000)%9)+9)%9);
+  const names=['一白水星','二黒土星','三碧木星','四緑木星','五黄土星','六白金星','七赤金星','八白土星','九紫火星'];
+  const descs=['直感・適応力が高い','誠実・粘り強い','行動力・挑戦心','調和・コミュ力','カリスマ・変革','天運・完璧主義','明るく社交的','安定・変革期','直感・霊感が強い'];
+  return{name:names[idx],desc:descs[idx]};
+}
+
+// ===== 天文・暦データ =====
+const FULL_MOON_NAMES={1:{jp:'ウルフムーン',en:'Wolf Moon',desc:'冬の夜、狼の遠吠えに由来。内なる声に耳を澄ます月。静寂の中で自分の本質と向き合う時。'},2:{jp:'スノームーン',en:'Snow Moon',desc:'最も雪深い季節の満月。浄化と忍耐の月。今は蓄える時、春への準備を整えよ。'},3:{jp:'ワームムーン',en:'Worm Moon',desc:'大地が解け始め虫が目覚める満月。再生と復活のサイン。新しい命が動き出す予兆。'},4:{jp:'ピンクムーン',en:'Pink Moon',desc:'春の花フロックスの色から。愛と美の季節の頂点。人間関係を深める絶好の満月。'},5:{jp:'フラワームーン',en:'Flower Moon',desc:'花が咲き誇る5月の満月。豊かさと開花の象徴。種まきしたことが花開く収穫の予兆。'},6:{jp:'ストロベリームーン',en:'Strawberry Moon',desc:'イチゴの収穫期の満月。喜びと豊穣の月。情熱と創造性が最高潮に達する時期。'},7:{jp:'バックムーン',en:'Buck Moon',desc:'牡鹿の角が生え変わる季節の満月。成長と再生の力。自信を持って前進せよ。'},8:{jp:'スタージョンムーン',en:'Sturgeon Moon',desc:'チョウザメが豊富に獲れる季節。豊かさの象徴。ライオンズゲートのエネルギーが最高潮。'},9:{jp:'ハーベストムーン',en:'Harvest Moon',desc:'秋の収穫の月。努力の結果を刈り取る時。感謝と手放しのエネルギーが満ちる。'},10:{jp:'ハンターズムーン',en:"Hunter's Moon",desc:'狩りの季節の満月。目標に向かって一気に動く時。直感と行動力が高まる。'},11:{jp:'ビーバームーン',en:'Beaver Moon',desc:'冬に備えてビーバーが巣を作る季節。準備と蓄積の月。基盤を固める時。'},12:{jp:'コールドムーン',en:'Cold Moon',desc:'最も夜が長く冷たい満月。内省と完成の月。一年を振り返り、感謝で締めくくれ。'}};
+const GATES=[{name:'ライオンズゲート',en:'Lions Gate',icon:'🦁',type:'lions',start:{m:7,d:26},end:{m:8,d:12},peak:{m:8,d:8},desc:'シリウスが地平線に昇り、太陽が獅子座に位置する宇宙の門が開く期間。高次元の光とコードが地球に降り注ぐ。マヤ暦の新年（7/26）とも重なる聖なる時。',peak_desc:'8月8日がピーク。シリウス・太陽・地球が一直線に整列。魂レベルの願いが最も届きやすい日。',do:['瞑想・意図設定をする','新しいビジョンを書き出す','魂レベルの願いを宇宙に送る','過去のトラウマを手放す儀式','自分の使命について深く考える'],dont:['重要な決断を先延ばしにする','古いパターンに戻ろうとする','ネガティブな感情を抑圧する']},{name:'ブルズゲート',en:"Bull's Gate",icon:'🐂',type:'bulls',start:{m:4,d:20},end:{m:5,d:20},peak:{m:5,d:5},desc:'太陽が牡牛座に入る期間。プレアデス星団（昴）が天空で輝き、地球との接続が強まる。物質的な豊かさと安定のエネルギーが高まる時期。',peak_desc:'5月5日前後のプレアデス統合がピーク。豊かさの意図設定に最適。',do:['土に触れる・自然の中にいる','金銭・不動産などの長期計画を立てる','感覚を喜ばせる（美食・音楽・アート）','身体を動かし地に足をつける'],dont:['性急な投資判断','肉体的な無理','物への執着を深める']}];
+const ASTRO_EVENTS={'2026-3-20':{name:'春分',icon:'🌸',desc:'昼夜等長。新しいサイクルの始まり。種を蒔くべき最強の吉日。'},'2026-6-21':{name:'夏至',icon:'☀️',desc:'一年で最も昼が長い日。太陽エネルギーが最高潮。行動・決断・表現に最適。'},'2026-9-22':{name:'秋分',icon:'🍂',desc:'昼夜等長。収穫と感謝のとき。手放しのエネルギーが強まる。'},'2026-12-21':{name:'冬至',icon:'❄️',desc:'一年で最も夜が長い日。内省と再生。次のサイクルへの準備を整える聖なる日。'},'2026-4-29':{name:'水星逆行開始',icon:'☿',desc:'通信・契約・移動に注意。見直し・振り返りに最適な期間が始まる。'},'2026-5-23':{name:'水星順行',icon:'☿',desc:'水星逆行終了。滞っていた物事が動き出す。新規の契約・スタートに適している。'}};
+const ICHIRYU={1:[4,5,8,16,17,20,28,29],2:[1,9,10,13,21,22,25],3:[1,9,10,13,21,22,25],4:[3,4,7,15,16,19,27,28],5:[3,4,7,15,16,19,27,28,31],6:[3,11,12,15,23,24,27],7:[2,10,11,14,22,23,26],8:[4,5,8,16,17,20,28,29],9:[1,9,10,13,21,22,25],10:[3,4,7,15,16,19,27,28,31],11:[3,11,12,15,23,24,27],12:[2,10,11,14,22,23,26]};
+const TENSYA={1:1,3:14,5:29,7:13,8:28,10:12,12:27};
+const FUNASOJI={1:[4,8,12,16,20,24,28],2:[1,5,9,13,17,21,25],3:[1,5,9,13,17,21,25,29],4:[2,6,10,14,18,22,26,30],5:[4,8,12,16,20,24,28],6:[1,5,9,13,17,21,25,29],7:[3,7,11,15,19,23,27,31],8:[4,8,12,16,20,24,28],9:[1,5,9,13,17,21,25,29],10:[3,7,11,15,19,23,27,31],11:[4,8,12,16,20,24,28],12:[2,6,10,14,18,22,26,30]};
+const SANRINBO={1:[3,15,27],2:[11,23],3:[7,19,31],4:[3,15,27],5:[11,23],6:[7,19],7:[3,15,27],8:[11,23],9:[7,19],10:[1,13,25],11:[9,21],12:[5,17,29]};
+const ROKUYO=['大安','赤口','先勝','友引','先負','仏滅'];
+const ROKUYO_INFO={'大安':{good:true,desc:'万事に大吉。六曜最強の吉日。',do:['結婚式・入籍','契約・開業','引越し・新居'],dont:[]},'友引':{good:true,desc:'勝負なし。慶事に吉（午除く）。',do:['結婚式','お祝い事'],dont:['葬儀・法事']},'先勝':{good:null,desc:'午前吉、午後凶。急いで吉。',do:['午前中に重要な行動を'],dont:['午後の大切な会合']},'先負':{good:null,desc:'午前凶、午後吉。焦らず吉。',do:['午後に重要な用件を'],dont:['午前中の急ぎ仕事']},'赤口':{good:false,desc:'凶日。正午のみ吉。火・刃物注意。',do:['正午前後に重要な用件を'],dont:['新しいことを始める','火・刃物の使用']},'仏滅':{good:false,desc:'六曜最大の凶日。万事控えるべし。',do:['静かに過ごす','断捨離・内省'],dont:['結婚式','開業・契約','お祝い事']}};
+const KS_NAME=['一白水星','二黒土星','三碧木星','四緑木星','五黄土星','六白金星','七赤金星','八白土星','九紫火星'];
+const KS_DESC=['知性・直感・水の流れ','忍耐・誠実・大地の力','行動・挑戦・雷の勢い','調和・信頼・風の縁','変革・中心・カオスと秩序','天運・精進・金の輝き','喜悦・表現・人気運','変化・革新・山の不動','直感・明晰・火の閃き'];
+const KS_DO=['静かに過ごし直感を磨く','誠実に地道に。土いじり・料理が吉','新しいことを始める。スピード勝負','人脈づくり・コミュニケーション','変化を恐れず動く。断捨離','目標設定・神社参拝','楽しいことを優先。SNS発信が吉','基盤を整える。不動産・貯蓄の見直し','ひらめきを行動に。芸術活動'];
+const KS_DONT=['感情的な言動','性急な変化','慎重さを欠く行動','依存・馴れ合い','執着・意固地','プライドを捨てた行動','浪費・軽率な発言','急ぎすぎた変化','論理だけで判断'];
+const TZOLKIN_SEALS=['赤い竜','白い風','青い夜','黄色い種','赤い蛇','白い世界の橋渡し','青い手','黄色い星','赤い月','白い犬','青い猿','黄色い人','赤いスカイウォーカー','白い魔法使い','青いワシ','黄色い戦士','赤い地球','白い鏡','青い嵐','黄色い太陽'];
+const TZOLKIN_TONES=['磁気','月','電気','自己存在','倍音','リズム','共鳴','銀河系','太陽','惑星','スペクトル','水晶','宇宙'];
+const MOON13_NAMES=['磁気の月','月の月','電気の月','自己存在の月','倍音の月','リズムの月','共鳴の月','銀河系の月','太陽の月','惑星の月','スペクトルの月','水晶の月','宇宙の月'];
+
+function getRokuyo(y,m,d){const base=new Date(2024,0,11);const diff=Math.round((new Date(y,m-1,d)-base)/86400000);return ROKUYO[((diff%6)+6)%6];}
+function getMoonAge(date){const base=new Date(2000,0,6,18,14);let age=((date-base)/86400000)%29.53059;return age<0?age+29.53059:age;}
+function getMoonPhase(age){if(age<1.5)return{icon:'🌑',name:'新月',key:'new'};if(age<6.5)return{icon:'🌒',name:'三日月',key:'waxc'};if(age<8.5)return{icon:'🌓',name:'上弦の月',key:'fq'};if(age<13.5)return{icon:'🌔',name:'十三夜',key:'waxg'};if(age<16.5)return{icon:'🌕',name:'満月',key:'full'};if(age<21.5)return{icon:'🌖',name:'十六夜',key:'wang'};if(age<23.5)return{icon:'🌗',name:'下弦の月',key:'lq'};return{icon:'🌘',name:'晦日月',key:'wanc'};}
+function getKyusei(dt){const base=new Date(2000,0,7);const diff=Math.floor((dt-base)/86400000);const idx=((diff%9)+9)%9;return{name:KS_NAME[idx],desc:KS_DESC[idx],doTxt:KS_DO[idx],dontTxt:KS_DONT[idx]};}
+function getTzolkin(date){const base=new Date(2020,7,1);const diff=Math.floor((date-base)/86400000);const pos=((diff%260)+260)%260;return{seal:TZOLKIN_SEALS[pos%20],tone:TZOLKIN_TONES[pos%13],pos};}
+function getMoon13(date){const base=new Date(2025,6,26);const diff=Math.floor((date-base)/86400000);const dayOfYear=((diff%364)+364)%364;if(dayOfYear>=364)return{moonName:'時間外の日',day:1};return{moonName:MOON13_NAMES[Math.floor(dayOfYear/28)]||'宇宙の月',day:(dayOfYear%28)+1};}
+function getToraDays(y,m){const base=new Date(2026,0,7);const r=[];const days=new Date(y,m,0).getDate();for(let d=1;d<=days;d++){const diff=Math.round((new Date(y,m-1,d)-base)/86400000);if(diff>=0&&diff%12===0)r.push(d);}return r;}
+function getMiDays(y,m){const base=new Date(2026,0,9);const r=[];const days=new Date(y,m,0).getDate();for(let d=1;d<=days;d++){const diff=Math.round((new Date(y,m-1,d)-base)/86400000);if(diff>=0&&diff%12===0)r.push(d);}return r;}
+function getActiveGate(y,m,d){for(const g of GATES){const s=g.start,e=g.end;if((m>s.m||(m===s.m&&d>=s.d))&&(m<e.m||(m===e.m&&d<=e.d)))return g;}return null;}
+function isPeakDay(y,m,d){return GATES.some(g=>g.peak.m===m&&g.peak.d===d);}
+function getAstroEvent(y,m,d){return ASTRO_EVENTS[`${y}-${m}-${d}`]||null;}
+function getLifeNumber(dateStr){const digits=dateStr.replace(/-/g,'').split('').map(Number);let sum=digits.reduce((a,b)=>a+b,0);while(sum>9&&sum!==11&&sum!==22&&sum!==33)sum=[...String(sum)].map(Number).reduce((a,b)=>a+b,0);return sum;}
+
+// 個人リーディング生成
+function getPersonalReading(dt,profile){
+  if(!profile)return null;
+  const bd=new Date(profile.birth);
+  const dayKs=getKyusei(dt);
+  const birthKs=getKyuseiYear(bd);
+  const dayTz=getTzolkin(dt);
+  const birthTz=getTzolkin(bd);
+  const lifeNum=getLifeNumber(profile.birth);
+  const dayAge=getMoonAge(dt);
+  const birthAge=getMoonAge(bd);
+  const dayPh=getMoonPhase(dayAge);
+  const birthPh=getMoonPhase(birthAge);
+
+  // 月相の相性
+  let moonCompat='';
+  if(dayPh.key===birthPh.key) moonCompat='生まれの月相と一致。魂が共鳴する特別な日。';
+  else if(dayPh.key==='full') moonCompat='満月があなたの感情と直感を解放する。';
+  else if(dayPh.key==='new') moonCompat='新月があなたの新しいサイクルを呼び起こす。';
+
+  // 九星の関係
+  const dayIdx=KS_NAME.indexOf(dayKs.name);
+  const birthIdx=KS_NAME.indexOf(birthKs.name);
+  const diff=Math.abs(dayIdx-birthIdx);
+  let ksRelation='';
+  if(diff===0) ksRelation='本命星と一致。自分本来の力が最大に発揮できる日。';
+  else if(diff===4||diff===5) ksRelation='本命星と対角。変革と飛躍のチャンスが訪れる日。';
+  else if(diff<=2) ksRelation='本命星と調和。流れに乗って動くと吉。';
+
+  // ツォルキン相性
+  let tzCompat='';
+  if(dayTz.seal===birthTz.seal) tzCompat=`あなたの紋章「${birthTz.seal}」の日。本来の自分で輝ける。`;
+  else if(dayTz.tone===birthTz.tone) tzCompat=`生まれの音「${birthTz.tone}」と共鳴。直感が冴える。`;
+
+  // ライフパスからのメッセージ
+  const lifeMessages={
+    1:'リーダーシップを発揮して。あなたの判断が今日の鍵。',
+    2:'調和とパートナーシップの日。誰かと組むと良い結果が生まれる。',
+    3:'創造性と表現の日。アイデアを外に出して。',
+    4:'基盤を固める日。コツコツとした努力が実る。',
+    5:'自由と冒険の日。新しい体験が扉を開く。',
+    6:'家庭・愛情・責任の日。大切な人を思いやって。',
+    7:'内省と分析の日。答えは内側にある。',
+    8:'豊かさと達成の日。ビジネスに積極的に動いて。',
+    9:'完成と奉仕の日。手放しと感謝が次の扉を開く。',
+    11:'直感と啓示の日。スピリチュアルな洞察を信じて。',
+    22:'大きなビジョンを描く日。長期的な計画が吉。',
+    33:'愛と奉仕の日。誰かのために動くことで運が開く。',
+  };
+
+  return {
+    name: profile.name,
+    birthKs: birthKs.name,
+    birthTz: birthTz.seal,
+    lifeNum,
+    moonCompat,
+    ksRelation,
+    tzCompat,
+    lifeMsg: lifeMessages[lifeNum]||'',
+  };
+}
+
+const MOON_PHASE_INFO={new:{desc:'新月。エネルギーリセットの日。意図設定・新しい始まりに最強の日。',do:['新しいプロジェクトを始める','願い事リストを書く','デトックス・断食','瞑想・内省'],dont:['重要な決断の強行','感情的な対立','過去にこだわる']},waxc:{desc:'月が育ち始める。蒔いた種が芽吹く兆し。小さな行動を積み重ねよ。',do:['コツコツした作業','学習・情報収集'],dont:['焦って大きく動く']},fq:{desc:'上弦の月。行動フェーズの中間点。壁を突破する力が高まる。',do:['困難に立ち向かう','決断と実行'],dont:['立ち止まって迷う']},waxg:{desc:'満月へ向かう高揚期。社交・発信に吉。',do:['人に会う・交流する','成果を発信する'],dont:['孤立・引きこもる']},full:{desc:'満月。感情・直感・引力が最大。見えなかったことが明らかになる。',do:['完成させる・提出する','感謝を伝える','浄化の儀式'],dont:['感情的な衝突','重要な新規スタート']},wang:{desc:'十六夜。少しずつ手放すフェーズへ。',do:['成果の整理','感謝日記をつける'],dont:['新規の大きな投資']},lq:{desc:'下弦の月。執着を手放すと次の新月への道が開ける。',do:['断捨離・整理整頓','借金返済・清算'],dont:['新しいことを始める']},wanc:{desc:'晦日月。静かに待つ時。エネルギーチャージと内省の時間。',do:['休息・睡眠を優先','瞑想・マインドフルネス'],dont:['無理に動く','新規スタート']}};
+
+// ===== 状態 =====
+const today=new Date();
+let vY=today.getFullYear(),vM=today.getMonth()+1;
+let selD=today.getDate(),selY=vY,selM=vM;
+const MONTHS=['睦月','如月','弥生','卯月','皐月','水無月','文月','葉月','長月','神無月','霜月','師走'];
+
+function changeMonth(dir){vM+=dir;if(vM>12){vM=1;vY++;}if(vM<1){vM=12;vY--;}render();}
+
+function render(){
+  document.getElementById('mLabel').textContent=`${vM}月 · ${MONTHS[vM-1]}`;
+  document.getElementById('yLabel').textContent=`${vY}`;
+  updateBanner();
+
+  // ゲートバナー
+  const todayGate=getActiveGate(today.getFullYear(),today.getMonth()+1,today.getDate());
+  const gb=document.getElementById('gateBanner');
+  if(todayGate){
+    const isPeak=isPeakDay(today.getFullYear(),today.getMonth()+1,today.getDate());
+    gb.innerHTML=`<div class="gate-banner ${todayGate.type}"><div class="gate-icon">${todayGate.icon}</div><div class="gate-info"><b>${todayGate.name}${isPeak?' ✦ ピーク':' 開催中'}</b><span>${isPeak?todayGate.peak_desc:todayGate.desc.slice(0,35)+'…'}</span></div></div>`;
+  } else gb.innerHTML='';
+
+  // グリッド
+  const grid=document.getElementById('grid');
+  grid.innerHTML='';
+  const firstDay=new Date(vY,vM-1,1).getDay();
+  const daysInM=new Date(vY,vM,0).getDate();
+  const ichList=ICHIRYU[vM]||[],funaList=FUNASOJI[vM]||[],sanList=SANRINBO[vM]||[];
+  const toraList=getToraDays(vY,vM),miList=getMiDays(vY,vM);
+  const tensyaD=TENSYA[vM]||-1;
+
+  for(let i=0;i<firstDay;i++){const b=document.createElement('div');b.className='dc empty';grid.appendChild(b);}
+  for(let d=1;d<=daysInM;d++){
+    const dt=new Date(vY,vM-1,d);
+    const age=getMoonAge(dt);const phase=getMoonPhase(age);
+    const isToday=(d===today.getDate()&&vM===today.getMonth()+1&&vY===today.getFullYear());
+    const isSel=(d===selD&&vM===selM&&vY===selY);
+    const gDay=getActiveGate(vY,vM,d);const pDay=isPeakDay(vY,vM,d);const astro=getAstroEvent(vY,vM,d);
+    const cell=document.createElement('div');
+    cell.className='dc'+(isToday?' today':'')+(isSel?' selected':'')+(gDay?' gate-day':'')+(pDay?' peak-day':'');
+    const dn=document.createElement('div');dn.className='dn';dn.textContent=d;cell.appendChild(dn);
+    const mi=document.createElement('div');
+    if(['new','fq','full','lq'].includes(phase.key)){mi.className='moon-sm';mi.textContent=phase.icon;}
+    else{mi.className='moon-sm dim';mi.textContent='·';}
+    cell.appendChild(mi);
+    const tags=document.createElement('div');tags.className='tags';
+    if(d===tensyaD)tags.innerHTML+=`<span class="tg tg-g">天赦</span>`;
+    if(ichList.includes(d))tags.innerHTML+=`<span class="tg tg-g">一粒</span>`;
+    if(toraList.includes(d))tags.innerHTML+=`<span class="tg tg-gr">寅</span>`;
+    if(miList.includes(d))tags.innerHTML+=`<span class="tg tg-gr">巳</span>`;
+    if(funaList.includes(d))tags.innerHTML+=`<span class="tg tg-r">不成</span>`;
+    if(sanList.includes(d))tags.innerHTML+=`<span class="tg tg-r">三隣</span>`;
+    if(astro)tags.innerHTML+=`<span class="tg tg-b">${astro.name.slice(0,2)}</span>`;
+    if(pDay)tags.innerHTML+=`<span class="tg tg-p">✦峰</span>`;
+    cell.appendChild(tags);
+    cell.onclick=()=>{selD=d;selY=vY;selM=vM;render();setTimeout(()=>document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'nearest'}),50);};
+    grid.appendChild(cell);
+  }
+  updatePanel(new Date(selY,selM-1,selD));
+}
+
+function updateBanner(){
+  const dt=new Date();const age=getMoonAge(dt);const ph=getMoonPhase(age);
+  document.getElementById('bIcon').textContent=ph.icon;
+  document.getElementById('bName').textContent=ph.name;
+  document.getElementById('bAge').textContent=Math.floor(age);
+  const mn=FULL_MOON_NAMES[dt.getMonth()+1];
+  let desc=age<14.8?`満月まであと${Math.ceil(14.8-age)}日`:`新月まであと${Math.ceil(29.5-age)}日`;
+  if(ph.key==='full'&&mn)document.getElementById('bDesc').innerHTML=`${mn.jp} · ${mn.en}<br>${desc}`;
+  else document.getElementById('bDesc').textContent=desc;
+}
+
+function updatePanel(dt){
+  const y=dt.getFullYear(),m=dt.getMonth()+1,d=dt.getDate();
+  const age=getMoonAge(dt);const ph=getMoonPhase(age);
+  const ks=getKyusei(dt);const rk=getRokuyo(y,m,d);const rkInfo=ROKUYO_INFO[rk];
+  const tz=getTzolkin(dt);const m13=getMoon13(dt);
+  const ichList=ICHIRYU[m]||[],funaList=FUNASOJI[m]||[],sanList=SANRINBO[m]||[];
+  const toraList=getToraDays(y,m),miList=getMiDays(y,m);
+  const tensyaD=TENSYA[m]||-1;
+  const gate=getActiveGate(y,m,d);const isPeak=isPeakDay(y,m,d);
+  const astro=getAstroEvent(y,m,d);const phInfo=MOON_PHASE_INFO[ph.key];
+  const mn=FULL_MOON_NAMES[m];
+  const dw=['日','月','火','水','木','金','土'][dt.getDay()];
+  const profile=loadProfile();
+  const personal=getPersonalReading(dt,profile);
+
+  // スコア
+  let gs=0,bs=0;
+  if(d===tensyaD)gs+=3;if(ichList.includes(d))gs+=2;if(toraList.includes(d))gs+=1;if(miList.includes(d))gs+=1;
+  if(rk==='大安')gs+=2;if(rk==='友引')gs+=1;if(isPeak)gs+=3;
+  if(funaList.includes(d))bs+=2;if(sanList.includes(d))bs+=1;if(rk==='仏滅')bs+=2;if(rk==='赤口')bs+=1;
+  const score=Math.max(0,Math.min(10,5+gs-bs));
+  const dots=Array.from({length:10},(_,i)=>`<span style="display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 2px;background:${i<score?'var(--gold)':'rgba(255,255,255,.1)'};"></span>`).join('');
+
+  // フロー
+  let fp=0,fi=0;
+  if(age<7.4){fi=0;fp=age/7.4*25;}else if(age<14.8){fi=1;fp=25+(age-7.4)/7.4*25;}else if(age<22.1){fi=2;fp=50+(age-14.8)/7.3*25;}else{fi=3;fp=75+(age-22.1)/7.4*25;}
+  const flabs=['🌑種まき期','🌓行動期','🌕開花期','🌗手放し期'];
+
+  let html=`
+  <div class="panel-head">
+    <div><div class="panel-date">${m}/${d}（${dw}）</div><div class="panel-date-sub">${y}年 · 月齢${age.toFixed(1)}日</div></div>
+    <div class="panel-moon">${ph.icon}</div>
+    <div class="panel-moon-info"><div class="mn">${ph.name}</div><div class="ma">月齢 ${age.toFixed(1)}</div></div>
+  </div>`;
+
+  // 個人リーディング（プロフィールあり）
+  if(personal){
+    const msgs=[];
+    if(personal.moonCompat)msgs.push(personal.moonCompat);
+    if(personal.ksRelation)msgs.push(personal.ksRelation);
+    if(personal.tzCompat)msgs.push(personal.tzCompat);
+    if(personal.lifeMsg)msgs.push(personal.lifeMsg);
+    html+=`
+    <div class="psec">
+      <div class="psec-label">✦ ${personal.name}さんへのメッセージ</div>
+      <div class="personal-card">
+        <div class="pc-title">今日の個人リーディング</div>
+        <div class="pc-body">${msgs.map(m=>`• ${m}`).join('<br>')}</div>
+        <div class="compat-row">
+          <span class="compat-badge">本命星：${personal.birthKs}</span>
+          <span class="compat-badge">紋章：${personal.birthTz}</span>
+          <span class="compat-badge">ライフパス：${personal.lifeNum}</span>
+        </div>
+      </div>
+    </div>`;
+  } else {
+    html+=`
+    <div class="psec">
+      <div class="psec-label">✦ 個人リーディング</div>
+      <div style="font-size:11px;color:var(--dim);padding:4px 0;line-height:1.7;">
+        「マイ星座」タブで誕生日を登録すると、<br>あなただけの宇宙からのメッセージが届きます。
+      </div>
+    </div>`;
+  }
+
+  // エネルギースコア
+  html+=`<div class="psec"><div class="psec-label">Energy Score</div><div style="margin-bottom:6px;">${dots}</div><div style="font-size:11px;color:var(--dim);">${gs>bs?'✦ 吉日。積極的に動くと良い':gs===bs?'バランスの日。慎重に':'注意日。ゆっくり過ごすのが吉'}</div></div>`;
+
+  // マヤ暦
+  html+=`<div class="psec"><div class="psec-label">Maya Calendar</div><div class="maya-row"><div class="maya-card"><div class="mi">🌀</div><div class="ml">TZOLKIN</div><div class="mv">${tz.seal}<br><span style="font-size:10px;color:var(--dim);">音${(tz.pos%13)+1}・${tz.tone}</span></div></div><div class="maya-card"><div class="mi">🌙</div><div class="ml">13 MOONS</div><div class="mv">${m13.moonName}<br><span style="font-size:10px;color:var(--dim);">${m13.day}日目</span></div></div></div></div>`;
+
+  // 満月の名前
+  if(ph.key==='full'&&mn){html+=`<div class="psec"><div class="psec-label">Full Moon</div><div class="full-moon-name"><div class="fn">${mn.jp}</div><div class="fe">${mn.en}</div><div class="fd">${mn.desc}</div></div></div>`;}
+
+  // 吉凶カード
+  const cards=[];
+  if(phInfo)cards.push({type:ph.key==='full'||ph.key==='new'?'good':'neutral',icon:ph.icon,name:ph.name+(ph.key==='full'&&mn?` — ${mn.jp}`:''),desc:phInfo.desc,dos:phInfo.do,donts:phInfo.dont});
+  if(d===tensyaD)cards.push({type:'good',icon:'✨',name:'天赦日 — 最強の吉日',desc:'天がすべての罪を赦す年に6回だけの最強吉日。何を始めても天の後押しが得られる。',dos:['新しいことを始める','財布の新調','神社参拝','契約・投資'],dont:['何もせず無駄に過ごす']});
+  if(ichList.includes(d))cards.push({type:'good',icon:'🌾',name:'一粒万倍日',desc:'一粒の種が万倍になる吉日。財布の新調・種まき・新規開業・預金開始に最適。',dos:['新規ビジネス・口座開設','財布新調','種まき','人に奢る'],dont:['借金（万倍になる）','悪いことを始める']});
+  if(toraList.includes(d))cards.push({type:'good',icon:'🐯',name:'寅の日 — 金運の日',desc:'出て行ったものが戻ってくる。金運・旅行・出発に吉。',dos:['旅行の出発','財布の購入','お金を出すこと'],dont:['葬儀・弔事']});
+  if(miList.includes(d))cards.push({type:'good',icon:'🐍',name:'巳の日 — 弁財天縁日',desc:'弁財天の使いである蛇の日。金運・財運・芸能のエネルギーが高まる。',dos:['弁財天・神社参拝','金融機関の手続き','芸術活動'],dont:['浪費・散財']});
+  cards.push({type:rkInfo.good===true?'good':rkInfo.good===false?'caution':'neutral',icon:rk==='大安'?'🎊':rk==='仏滅'?'🚫':rk==='友引'?'🤝':'⚖',name:`六曜 — ${rk}`,desc:rkInfo.desc,dos:rkInfo.do,dont:rkInfo.dont||[]});
+  if(funaList.includes(d))cards.push({type:'caution',icon:'⚠️',name:'不成就日',desc:'何事も成就しない凶日。物事が成立しにくく、始まりに縁起が悪い。',dos:['現状維持','内省・計画立案'],dont:['新規契約','結婚・入籍','大きな投資']});
+  if(sanList.includes(d))cards.push({type:'caution',icon:'🔨',name:'三隣亡',desc:'建築・引越しの大凶日。',dos:['現状維持','静かに過ごす'],dont:['建築開始','引越し','大規模工事']});
+  if(gate)cards.push({type:'gate',icon:gate.icon,name:`${gate.name}${isPeak?' ✦ ピーク':''}`,desc:isPeak?gate.peak_desc:gate.desc,dos:gate.do,dont:gate.dont});
+  if(astro)cards.push({type:'astro',icon:astro.icon,name:astro.name,desc:astro.desc,dos:['節目の儀式・意図設定'],dont:[]});
+  cards.push({type:'neutral',icon:'⭐',name:`九星気学 — ${ks.name}`,desc:ks.desc,dos:[ks.doTxt],dont:[ks.dontTxt]});
+
+  html+=`<div class="psec"><div class="psec-label">Day Reading</div><div class="day-cards">`;
+  cards.forEach(c=>{
+    html+=`<div class="day-card ${c.type}"><div class="dc-icon">${c.icon}</div><div class="dc-body"><div class="dc-name">${c.name}</div><div class="dc-desc">${c.desc}</div><div class="dc-actions">`;
+    (c.dos||[]).forEach(a=>{html+=`<div class="dc-do">${a}</div>`;});
+    (c.dont||[]).forEach(a=>{html+=`<div class="dc-dont">${a}</div>`;});
+    html+=`</div></div></div>`;
+  });
+  html+=`</div></div>`;
+
+  // フロー
+  html+=`<div class="flow-wrap"><div style="font-size:9px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:8px;">Monthly Flow</div><div class="flow-track"><div class="flow-fill" style="width:${Math.min(fp,100)}%"></div></div><div class="flow-labels">${flabs.map((l,i)=>`<div class="fl${i===fi?' on':''}">${l}</div>`).join('')}</div></div>`;
+
+  document.getElementById('panel').innerHTML=html;
+}
+
+// 初期化
+render();
+// プロフィールがあればフォームにセット
+const savedProfile=loadProfile();
+if(savedProfile){
+  document.getElementById('inputName').value=savedProfile.name||'';
+  document.getElementById('inputBirth').value=savedProfile.birth||'';
+  document.getElementById('inputTime').value=savedProfile.time||'';
+}
+</script>
+</body>
+</html>
