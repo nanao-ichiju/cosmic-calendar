@@ -10,378 +10,260 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon.svg">
 <title>宇宙暦カレンダー</title>
-<link id="fontLink" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;600&family=Noto+Sans+JP:wght@200;300;400&family=IM+Fell+English:ital@0;1&family=Kaisei+Decol:wght@400;700&family=M+PLUS+Rounded+1c:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;600&family=Noto+Sans+JP:wght@300;400;500&family=IM+Fell+English:ital@0;1&family=Kaisei+Decol:wght@400;700&family=M+PLUS+Rounded+1c:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
-/* ══════════════════════════════════════
-   THEME SYSTEM
-══════════════════════════════════════ */
-:root {
+:root{
   --bg:#06090f;--bg2:#0b1018;--bg3:#101825;
-  --gold:#c8a84b;--gold-l:#e8d080;--gold-d:#7a6428;
-  --silver:#a0b0c4;--moon:#f2eada;--text:#ddd8ce;--dim:#8090a4;
-  --red:#c05050;--red-l:#f0a0a0;--green:#4a9468;--green-l:#90d8b0;
-  --blue:#4a6ab8;--blue-l:#90b0e8;--purple:#7858a8;--purple-l:#c0a0e8;
-  --cell-bg:rgba(11,16,24,.7);--border:rgba(200,168,75,.15);
-  --tag-size:9px;--day-size:16px;--body-font:'Noto Sans JP',sans-serif;
-  --display-font:'Cinzel',serif;--r:16px;
-  --gate-bg:rgba(120,88,168,.15);--gate-border:rgba(120,88,168,.5);
-  --gate-glow:rgba(120,88,168,.3);
+  --gold:#c8a84b;--gold-l:#f0d888;--gold-d:#7a6428;
+  --moon:#f5f0e8;--text:#e0dbd2;--dim:#909aaa;
+  --red:#c05050;--red-l:#ffb0b0;--green:#4a9468;--green-l:#90d8b0;
+  --blue:#4a6ab8;--blue-l:#90b8f0;--purple:#7858a8;--purple-l:#c0a0f0;
+  --cell-bg:rgba(11,16,24,.75);--border:rgba(200,168,75,.18);
+  --tag-size:10px;--day-size:17px;
+  --body-font:'Noto Sans JP',sans-serif;--display-font:'Cinzel',serif;
+  --r:16px;--gate-bg:rgba(120,88,168,.18);--gate-border:rgba(120,88,168,.55);--gate-glow:rgba(120,88,168,.35);
 }
+[data-theme="white"]{--bg:#f4f0e8;--bg2:#ede8dc;--bg3:#e4ddd0;--gold:#8a6a20;--gold-l:#6a5010;--gold-d:#c8a84b;--moon:#2a2010;--text:#3a3020;--dim:#8a8070;--cell-bg:rgba(255,252,245,.85);--border:rgba(138,106,32,.2);}
+[data-theme="sumi"]{--bg:#0a0806;--bg2:#120e0a;--bg3:#1a1410;--gold:#cc4422;--gold-l:#ff7755;--gold-d:#882211;--moon:#e8e0d0;--text:#d0c8b8;--dim:#807870;--cell-bg:rgba(18,14,10,.85);--border:rgba(204,68,34,.2);}
+[data-theme="sakura"]{--bg:#1a0810;--bg2:#240c18;--bg3:#2e1020;--gold:#e890b0;--gold-l:#ffb8d0;--gold-d:#c06080;--moon:#fff0f4;--text:#f0d0dc;--dim:#b08090;--cell-bg:rgba(36,12,24,.85);--border:rgba(232,144,176,.2);--gate-bg:rgba(200,80,120,.15);--gate-border:rgba(200,80,120,.5);}
+[data-theme="umi"]{--bg:#020e1a;--bg2:#041420;--bg3:#061a2a;--gold:#40c0e0;--gold-l:#80e8ff;--gold-d:#208090;--moon:#e0f4ff;--text:#c8e8ff;--dim:#5090a8;--cell-bg:rgba(4,20,32,.85);--border:rgba(64,192,224,.2);--gate-bg:rgba(32,128,160,.15);--gate-border:rgba(32,128,160,.5);}
+[data-theme="anime"]{--bg:#0a1428;--bg2:#0e1c38;--bg3:#122448;--gold:#ffcc00;--gold-l:#ffe866;--gold-d:#cc9900;--moon:#ffffff;--text:#e8f0ff;--dim:#8898c8;--cell-bg:rgba(14,28,56,.85);--border:rgba(255,204,0,.28);--gate-bg:rgba(255,100,0,.18);--gate-border:rgba(255,180,0,.6);}
+[data-theme="pop"]{--bg:#1a0a2e;--bg2:#220e3a;--bg3:#2c1248;--gold:#ff6eb4;--gold-l:#ffaadd;--gold-d:#cc4488;--moon:#fff8ff;--text:#f8e0f8;--dim:#c090c0;--cell-bg:rgba(34,14,58,.85);--border:rgba(255,110,180,.28);--gate-bg:rgba(255,80,160,.15);--gate-border:rgba(255,120,200,.6);}
+[data-theme="mizutama"]{--bg:#f0eeff;--bg2:#e8e4ff;--bg3:#dfd8ff;--gold:#7040c0;--gold-l:#5020a0;--gold-d:#9060e0;--moon:#2a1060;--text:#3a2070;--dim:#9080b0;--cell-bg:rgba(255,255,255,.75);--border:rgba(112,64,192,.22);--gate-bg:rgba(160,80,255,.1);--gate-border:rgba(160,80,255,.4);}
+[data-font="modern"]{--display-font:'M PLUS Rounded 1c',sans-serif;--body-font:'M PLUS Rounded 1c',sans-serif;}
+[data-font="wa"]{--display-font:'Kaisei Decol',serif;--body-font:'Kaisei Decol',serif;}
 
-/* ── 無料テーマ ── */
-[data-theme="white"] {
-  --bg:#f4f0e8;--bg2:#ede8dc;--bg3:#e4ddd0;
-  --gold:#8a6a20;--gold-l:#6a5010;--gold-d:#c8a84b;
-  --moon:#2a2010;--text:#3a3020;--dim:#8a8070;
-  --cell-bg:rgba(255,252,245,.8);--border:rgba(138,106,32,.2);
-}
-[data-theme="sumi"] {
-  --bg:#0a0806;--bg2:#120e0a;--bg3:#1a1410;
-  --gold:#cc4422;--gold-l:#ff6644;--gold-d:#882211;
-  --moon:#e8e0d0;--text:#c8c0b0;--dim:#706860;
-  --cell-bg:rgba(18,14,10,.8);--border:rgba(204,68,34,.2);
-}
-
-/* ── 有料テーマ ── */
-[data-theme="sakura"] {
-  --bg:#1a0810;--bg2:#240c18;--bg3:#2e1020;
-  --gold:#e890b0;--gold-l:#ffb8d0;--gold-d:#c06080;
-  --moon:#fff0f4;--text:#f0d0dc;--dim:#b08090;
-  --cell-bg:rgba(36,12,24,.8);--border:rgba(232,144,176,.2);
-  --gate-bg:rgba(200,80,120,.15);--gate-border:rgba(200,80,120,.5);
-}
-[data-theme="umi"] {
-  --bg:#020e1a;--bg2:#041420;--bg3:#061a2a;
-  --gold:#40c0e0;--gold-l:#80e0f8;--gold-d:#208090;
-  --moon:#e0f4ff;--text:#c0ddf0;--dim:#507080;
-  --cell-bg:rgba(4,20,32,.8);--border:rgba(64,192,224,.2);
-  --gate-bg:rgba(32,128,160,.15);--gate-border:rgba(32,128,160,.5);
-}
-[data-theme="ajisai"] {
-  --bg:#0e0818;--bg2:#140c22;--bg3:#1a102c;
-  --gold:#9060d0;--gold-l:#c090ff;--gold-d:#6040a0;
-  --moon:#f0e8ff;--text:#d8c8f0;--dim:#806898;
-  --cell-bg:rgba(20,12,34,.8);--border:rgba(144,96,208,.2);
-}
-[data-theme="koyo"] {
-  --bg:#180804;--bg2:#200c06;--bg3:#2a1008;
-  --gold:#e06820;--gold-l:#ff9040;--gold-d:#a04010;
-  --moon:#fff0e0;--text:#f0d8c0;--dim:#907060;
-  --cell-bg:rgba(32,12,6,.8);--border:rgba(224,104,32,.2);
-}
-[data-theme="yuki"] {
-  --bg:#0a0e14;--bg2:#0e1420;--bg3:#141c2c;
-  --gold:#90b8e0;--gold-l:#c0d8f8;--gold-d:#6090b8;
-  --moon:#f0f8ff;--text:#d0e4f8;--dim:#708090;
-  --cell-bg:rgba(14,20,32,.8);--border:rgba(144,184,224,.2);
-}
-[data-theme="uchu"] {
-  --bg:#04000e;--bg2:#080018;--bg3:#0c0022;
-  --gold:#e040ff;--gold-l:#ff80ff;--gold-d:#a020cc;
-  --moon:#fff0ff;--text:#e8d0ff;--dim:#806090;
-  --cell-bg:rgba(8,0,24,.8);--border:rgba(224,64,255,.2);
-  --gate-bg:rgba(180,0,220,.2);--gate-border:rgba(220,64,255,.6);
-}
-[data-theme="anime"] {
-  --bg:#0a1428;--bg2:#0e1c38;--bg3:#122448;
-  --gold:#ffcc00;--gold-l:#ffe066;--gold-d:#cc9900;
-  --moon:#ffffff;--text:#e8f0ff;--dim:#8090b8;
-  --cell-bg:rgba(14,28,56,.8);--border:rgba(255,204,0,.25);
-  --gate-bg:rgba(255,100,0,.15);--gate-border:rgba(255,180,0,.6);
-}
-[data-theme="pop"] {
-  --bg:#1a0a2e;--bg2:#220e3a;--bg3:#2c1248;
-  --gold:#ff6eb4;--gold-l:#ffaadd;--gold-d:#cc4488;
-  --moon:#fff8ff;--text:#f8e0f8;--dim:#b080b0;
-  --cell-bg:rgba(34,14,58,.8);--border:rgba(255,110,180,.25);
-  --gate-bg:rgba(255,80,160,.15);--gate-border:rgba(255,120,200,.6);
-}
-[data-theme="mizutama"] {
-  --bg:#f8f4ff;--bg2:#f0eaff;--bg3:#e8deff;
-  --gold:#7040c0;--gold-l:#5020a0;--gold-d:#9060e0;
-  --moon:#2a1060;--text:#3a2070;--dim:#9080b0;
-  --cell-bg:rgba(255,255,255,.7);--border:rgba(112,64,192,.2);
-  --gate-bg:rgba(160,80,255,.1);--gate-border:rgba(160,80,255,.4);
-}
-
-/* ── フォント ── */
-[data-font="modern"] {
-  --display-font:'M PLUS Rounded 1c',sans-serif;
-  --body-font:'M PLUS Rounded 1c',sans-serif;
-}
-[data-font="wa"] {
-  --display-font:'Kaisei Decol',serif;
-  --body-font:'Kaisei Decol',serif;
-}
-
-/* ══════════════════════════════════════
-   BASE
-══════════════════════════════════════ */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow-x:hidden;}
-body{background:var(--bg);color:var(--text);font-family:var(--body-font);font-weight:300;font-size:14px;transition:background .4s,color .4s;}
-
+body{background:var(--bg);color:var(--text);font-family:var(--body-font);font-weight:300;font-size:15px;transition:background .4s,color .4s;}
 #stars{position:fixed;inset:0;z-index:0;pointer-events:none;}
-.app{position:relative;z-index:1;max-width:430px;margin:0 auto;padding-bottom:88px;}
-.page{display:none;position:relative;z-index:1;max-width:430px;margin:0 auto;padding-bottom:88px;}
+.page{display:none;position:relative;z-index:1;max-width:430px;margin:0 auto;padding-bottom:90px;}
 .page.active{display:block;}
 
-/* ══ ヘッダー ══ */
-.hdr{padding:20px 18px 10px;text-align:center;}
-.hdr-eyebrow{font-family:var(--display-font);font-size:9px;letter-spacing:5px;color:var(--gold-d);margin-bottom:6px;}
+/* ヘッダー */
+.hdr{padding:22px 18px 10px;text-align:center;}
+.hdr-eyebrow{font-family:var(--display-font);font-size:10px;letter-spacing:5px;color:var(--gold-d);margin-bottom:6px;}
 .month-nav{display:flex;align-items:center;justify-content:center;gap:20px;}
-.nav-btn{background:none;border:1px solid rgba(200,168,75,.25);color:var(--gold);width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;}
+.nav-btn{background:none;border:1px solid rgba(200,168,75,.28);color:var(--gold);width:36px;height:36px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;}
 .nav-btn:active{background:rgba(200,168,75,.15);}
-.month-txt .m{font-family:var(--display-font);font-size:26px;color:var(--moon);letter-spacing:1px;}
-.month-txt .y{font-size:11px;color:var(--dim);letter-spacing:3px;margin-top:1px;}
+.month-txt .m{font-family:var(--display-font);font-size:28px;color:var(--moon);letter-spacing:1px;}
+.month-txt .y{font-size:12px;color:var(--dim);letter-spacing:3px;margin-top:2px;}
 
-/* ══ バナー ══ */
-.banner{margin:8px 14px;background:linear-gradient(135deg,rgba(16,24,37,.95),rgba(10,16,24,.95));border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden;}
-.banner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(200,168,75,.06) 0%,transparent 70%);}
-.banner-icon{font-size:42px;filter:drop-shadow(0 0 12px rgba(242,234,218,.3));z-index:1;}
+/* バナー */
+.banner{margin:8px 14px;background:linear-gradient(135deg,rgba(16,24,37,.97),rgba(10,16,24,.97));border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden;}
+.banner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(200,168,75,.07) 0%,transparent 70%);}
+.banner-icon{font-size:46px;filter:drop-shadow(0 0 14px rgba(242,234,218,.35));z-index:1;}
 .banner-info{z-index:1;}
-.banner-info h3{font-family:var(--display-font);font-size:15px;color:var(--moon);font-weight:400;}
-.banner-info p{font-size:11px;color:var(--dim);margin-top:3px;line-height:1.5;}
+.banner-info h3{font-family:var(--display-font);font-size:16px;color:var(--moon);font-weight:400;}
+.banner-info p{font-size:12px;color:var(--dim);margin-top:4px;line-height:1.5;}
 .banner-age{margin-left:auto;text-align:right;z-index:1;}
-.banner-age .n{font-family:var(--display-font);font-size:30px;color:var(--gold);line-height:1;}
-.banner-age .u{font-size:10px;color:var(--dim);}
+.banner-age .n{font-family:var(--display-font);font-size:32px;color:var(--gold);line-height:1;}
+.banner-age .u{font-size:11px;color:var(--dim);}
 
-/* ══ ゲートバナー ══ */
-.gate-banner{margin:6px 14px;border-radius:var(--r);padding:11px 16px;display:flex;align-items:center;gap:10px;font-size:12px;border:1px solid var(--gate-border);background:var(--gate-bg);box-shadow:0 0 16px var(--gate-glow);}
-.gate-icon{font-size:22px;filter:drop-shadow(0 0 6px var(--gate-glow));}
-.gate-info b{color:var(--moon);font-weight:400;font-size:13px;}
-.gate-info span{color:var(--dim);font-size:10px;display:block;margin-top:1px;}
+/* ゲートバナー */
+.gate-banner{margin:6px 14px;border-radius:var(--r);padding:12px 16px;display:flex;align-items:center;gap:12px;border:1px solid var(--gate-border);background:var(--gate-bg);box-shadow:0 0 18px var(--gate-glow);}
+.gate-icon{font-size:24px;filter:drop-shadow(0 0 6px var(--gate-glow));}
+.gate-info b{color:var(--moon);font-weight:400;font-size:14px;}
+.gate-info span{color:var(--dim);font-size:11px;display:block;margin-top:2px;}
 
-/* ══ カレンダー ══ */
+/* ゲート矢印バー */
+.gate-arrow-bar{margin:0 14px 6px;border-radius:10px;padding:8px 14px;display:flex;align-items:center;gap:8px;font-size:12px;background:var(--gate-bg);border:1px solid var(--gate-border);}
+.gab-line{flex:1;height:2px;background:linear-gradient(90deg,var(--gate-border),var(--gold),var(--gate-border));border-radius:1px;position:relative;}
+.gab-peak{position:absolute;top:-9px;left:50%;transform:translateX(-50%);font-size:9px;color:var(--gold);white-space:nowrap;}
+.gab-dates{font-size:11px;color:var(--dim);white-space:nowrap;}
+
+/* カレンダー */
 .cal-wrap{margin:10px 14px;background:var(--cell-bg);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
-.wday{display:grid;grid-template-columns:repeat(7,1fr);background:rgba(0,0,0,.3);padding:8px 0 6px;}
-.wday span{text-align:center;font-size:11px;letter-spacing:.5px;color:var(--dim);font-weight:400;}
-.wday span:first-child{color:rgba(220,100,100,.8);}
-.wday span:last-child{color:rgba(100,140,220,.8);}
-.grid{display:grid;grid-template-columns:repeat(7,1fr);padding:4px 2px 6px;row-gap:1px;position:relative;}
+.wday{display:grid;grid-template-columns:repeat(7,1fr);background:rgba(0,0,0,.3);padding:9px 0 7px;}
+.wday span{text-align:center;font-size:12px;letter-spacing:.5px;color:var(--dim);font-weight:400;}
+.wday span:first-child{color:rgba(220,100,100,.85);}
+.wday span:last-child{color:rgba(100,140,220,.85);}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);padding:4px 2px 8px;row-gap:2px;position:relative;}
 
-/* ゲート帯（行またぎ対応） */
-.gate-row-bar{
-  position:absolute;height:calc(100%/6 - 4px);
-  background:var(--gate-bg);
-  border-top:1px solid var(--gate-border);
-  border-bottom:1px solid var(--gate-border);
-  pointer-events:none;z-index:0;
-  box-shadow:inset 0 0 12px var(--gate-glow);
-  border-radius:4px;
-}
-
-.dc{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;padding:3px 1px 4px;min-height:62px;cursor:pointer;border-radius:10px;transition:.15s;}
+.dc{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;padding:4px 1px 5px;min-height:66px;cursor:pointer;border-radius:10px;transition:.15s;}
 .dc:active{background:rgba(200,168,75,.1);}
 .dc.empty{pointer-events:none;}
-
-/* ゲート期間セル */
 .dc.gate-day{background:var(--gate-bg);}
-.dc.gate-start{border-left:2px solid var(--gate-border);border-radius:10px 0 0 10px;}
-.dc.gate-end{border-right:2px solid var(--gate-border);border-radius:0 10px 10px 0;}
-
-/* ピーク日 */
-.dc.peak-day{
-  background:linear-gradient(135deg,var(--gate-bg),rgba(200,168,75,.1));
-  border:1px solid var(--gold);
-  box-shadow:0 0 12px var(--gate-glow),0 0 6px rgba(200,168,75,.2);
-}
-.dc.peak-day .dn{color:var(--gold-l) !important;}
-
-/* 今日 */
-.dc.today .dn{
-  background:var(--gold);color:var(--bg) !important;
-  border-radius:50%;width:28px;height:28px;
-  display:flex;align-items:center;justify-content:center;
-  font-weight:600;box-shadow:0 0 8px rgba(200,168,75,.4);
-}
+.dc.peak-day{background:linear-gradient(135deg,var(--gate-bg),rgba(200,168,75,.08));border:1px solid var(--gold);box-shadow:0 0 10px var(--gate-glow),0 0 4px rgba(200,168,75,.2);}
+.dc.today .dn{background:var(--gold);color:var(--bg) !important;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-weight:600;box-shadow:0 0 10px rgba(200,168,75,.5);}
 .dc.selected{background:rgba(200,168,75,.1);}
 .dc.selected .dn{color:var(--gold) !important;}
-
-.dn{font-family:var(--display-font);font-size:var(--day-size);width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:var(--text);}
-.dc:nth-child(7n+1) .dn{color:#e09090;}
-.dc:nth-child(7n) .dn{color:#90a8e0;}
+.dn{font-family:var(--display-font);font-size:var(--day-size);width:30px;height:30px;display:flex;align-items:center;justify-content:center;color:var(--text);}
+.dc:nth-child(7n+1) .dn{color:#e8a0a0;}
+.dc:nth-child(7n) .dn{color:#90b0e8;}
 
 /* 旧暦 */
-.kyureki{font-size:8px;color:var(--dim);line-height:1;margin-top:0px;font-family:var(--body-font);}
+.kyureki{font-size:9px;color:var(--dim);line-height:1;margin-top:1px;}
 
 /* 月相 */
-.moon-sm{font-size:15px;line-height:1;margin-top:1px;filter:drop-shadow(0 0 3px rgba(242,234,218,.2));}
-.moon-sm.dim{font-size:9px;color:rgba(200,200,180,.25);}
-.moon-sm.near{font-size:12px;opacity:.6;}
+.moon-sm{font-size:16px;line-height:1;margin-top:2px;filter:drop-shadow(0 0 3px rgba(242,234,218,.2));}
+.moon-sm.near{font-size:13px;opacity:.65;}
+.moon-sm.dim{font-size:9px;color:rgba(200,200,180,.2);}
 
 /* タグ */
 .tags{display:flex;flex-wrap:wrap;justify-content:center;gap:1px;margin-top:2px;}
-.tg{font-size:var(--tag-size);padding:2px 4px;border-radius:4px;letter-spacing:.3px;white-space:nowrap;font-weight:400;}
-.tg-g{background:rgba(200,168,75,.3);color:var(--gold-l);border:1px solid rgba(200,168,75,.3);}
-.tg-r{background:rgba(192,80,80,.28);color:#ffb0b0;border:1px solid rgba(192,80,80,.3);}
-.tg-gr{background:rgba(74,148,104,.28);color:#a0f0c0;border:1px solid rgba(74,148,104,.3);}
-.tg-b{background:rgba(74,106,184,.28);color:#a0c0ff;border:1px solid rgba(74,106,184,.3);}
-.tg-p{background:rgba(120,88,168,.3);color:var(--purple-l);border:1px solid rgba(120,88,168,.3);}
+.tg{font-size:var(--tag-size);padding:2px 5px;border-radius:4px;letter-spacing:.3px;white-space:nowrap;font-weight:400;}
+.tg-g{background:rgba(200,168,75,.32);color:var(--gold-l);border:1px solid rgba(200,168,75,.35);}
+.tg-r{background:rgba(192,80,80,.3);color:#ffb8b8;border:1px solid rgba(192,80,80,.35);}
+.tg-gr{background:rgba(74,148,104,.3);color:#a0f0c0;border:1px solid rgba(74,148,104,.35);}
+.tg-b{background:rgba(74,106,184,.3);color:#a8c8ff;border:1px solid rgba(74,106,184,.35);}
+.tg-p{background:rgba(120,88,168,.32);color:var(--purple-l);border:1px solid rgba(120,88,168,.35);}
+.tg-moon{background:rgba(242,234,218,.15);color:var(--moon);border:1px solid rgba(242,234,218,.25);}
 
-/* ゲート矢印バー */
-.gate-arrow-bar{
-  margin:0 14px 6px;
-  border-radius:8px;padding:7px 12px;
-  display:flex;align-items:center;gap:8px;
-  font-size:11px;
-  background:var(--gate-bg);
-  border:1px solid var(--gate-border);
-  box-shadow:0 0 10px var(--gate-glow);
-}
-.gab-arrow{color:var(--gold);font-size:13px;flex-shrink:0;}
-.gab-line{flex:1;height:2px;background:linear-gradient(90deg,var(--gate-border),var(--gold),var(--gate-border));border-radius:1px;position:relative;}
-.gab-peak{position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:9px;color:var(--gold);white-space:nowrap;}
-.gab-dates{font-size:10px;color:var(--dim);white-space:nowrap;}
-
-/* ══ 詳細パネル ══ */
-.panel{margin:10px 14px;background:linear-gradient(160deg,rgba(12,18,28,.97),rgba(8,12,18,.97));border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
-.panel-head{padding:14px 16px 10px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:12px;}
-.panel-date{font-family:var(--display-font);font-size:28px;color:var(--moon);line-height:1;}
-.panel-date-sub{font-size:11px;color:var(--dim);margin-top:2px;}
-.panel-moon{font-size:32px;filter:drop-shadow(0 0 8px rgba(242,234,218,.25));}
+/* 詳細パネル */
+.panel{margin:10px 14px;background:linear-gradient(160deg,rgba(12,18,28,.98),rgba(8,12,18,.98));border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.panel-head{padding:16px 18px 12px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:14px;}
+.panel-date{font-family:var(--display-font);font-size:30px;color:var(--moon);line-height:1;}
+.panel-date-sub{font-size:12px;color:var(--dim);margin-top:3px;}
+.panel-moon{font-size:34px;filter:drop-shadow(0 0 10px rgba(242,234,218,.3));}
 .panel-moon-info{margin-left:auto;text-align:right;}
-.panel-moon-info .mn{font-family:var(--display-font);font-size:14px;color:var(--moon);}
-.panel-moon-info .ma{font-size:11px;color:var(--dim);margin-top:2px;}
-.psec{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.04);}
+.panel-moon-info .mn{font-family:var(--display-font);font-size:15px;color:var(--moon);}
+.panel-moon-info .ma{font-size:12px;color:var(--dim);margin-top:2px;}
+.psec{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.05);}
 .psec:last-child{border-bottom:none;}
-.psec-label{font-size:9px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:8px;}
+.psec-label{font-size:10px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:10px;}
+
+/* AIメッセージカード */
+.ai-card{background:linear-gradient(135deg,rgba(120,88,168,.15),rgba(74,148,104,.1));border:1px solid rgba(120,88,168,.4);border-radius:14px;padding:16px;position:relative;overflow:hidden;}
+.ai-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 20%,rgba(200,168,75,.06),transparent 70%);}
+.ai-card-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.ai-card-icon{font-size:26px;filter:drop-shadow(0 0 8px rgba(120,88,168,.5));}
+.ai-card-title{font-family:var(--display-font);font-size:14px;color:var(--moon);}
+.ai-card-sub{font-size:11px;color:var(--dim);margin-top:2px;}
+.ai-message{font-size:14px;color:var(--text);line-height:1.9;position:relative;z-index:1;}
+.ai-message .neg{color:var(--gold-l);font-weight:400;}
+.ai-message .pos{color:var(--green-l);font-weight:400;}
+.ai-action{margin-top:12px;padding:10px 14px;background:rgba(200,168,75,.1);border:1px solid rgba(200,168,75,.2);border-radius:10px;font-size:13px;color:var(--gold-l);line-height:1.6;}
+.ai-loading{text-align:center;padding:20px;color:var(--dim);font-size:13px;}
+.ai-loading .spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:8px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ai-retry{margin-top:10px;background:none;border:1px solid var(--border);color:var(--dim);padding:6px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-family:var(--body-font);}
+.ai-retry:active{background:rgba(255,255,255,.05);}
+
+/* 吉凶カード */
 .day-cards{display:flex;flex-direction:column;gap:8px;}
-.day-card{border-radius:12px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start;}
-.day-card.good{background:rgba(200,168,75,.08);border:1px solid rgba(200,168,75,.25);}
-.day-card.caution{background:rgba(192,80,80,.08);border:1px solid rgba(192,80,80,.25);}
-.day-card.neutral{background:rgba(96,104,120,.08);border:1px solid rgba(96,104,120,.2);}
+.day-card{border-radius:12px;padding:13px 15px;display:flex;gap:12px;align-items:flex-start;}
+.day-card.good{background:rgba(200,168,75,.09);border:1px solid rgba(200,168,75,.28);}
+.day-card.caution{background:rgba(192,80,80,.09);border:1px solid rgba(192,80,80,.28);}
+.day-card.neutral{background:rgba(96,104,120,.09);border:1px solid rgba(96,104,120,.22);}
 .day-card.gate{background:var(--gate-bg);border:1px solid var(--gate-border);}
-.day-card.astro{background:rgba(74,106,184,.08);border:1px solid rgba(74,106,184,.25);}
-.day-card.personal{background:rgba(74,148,104,.08);border:1px solid rgba(74,148,104,.3);}
-.dc-icon{font-size:22px;flex-shrink:0;margin-top:1px;}
-.dc-name{font-size:13px;color:var(--moon);font-weight:400;margin-bottom:4px;}
-.dc-desc{font-size:11px;color:var(--dim);line-height:1.7;margin-bottom:6px;}
-.dc-actions{display:flex;flex-direction:column;gap:4px;}
-.dc-do,.dc-dont{font-size:10px;padding:5px 8px;border-radius:6px;display:flex;align-items:flex-start;gap:5px;line-height:1.5;}
+.day-card.astro{background:rgba(74,106,184,.09);border:1px solid rgba(74,106,184,.28);}
+.day-card.personal{background:rgba(74,148,104,.09);border:1px solid rgba(74,148,104,.32);}
+.dc-icon{font-size:24px;flex-shrink:0;margin-top:1px;}
+.dc-name{font-size:14px;color:var(--moon);font-weight:400;margin-bottom:5px;}
+.dc-desc{font-size:12px;color:var(--dim);line-height:1.75;margin-bottom:7px;}
+.dc-actions{display:flex;flex-direction:column;gap:5px;}
+.dc-do,.dc-dont{font-size:11px;padding:6px 10px;border-radius:7px;display:flex;align-items:flex-start;gap:6px;line-height:1.5;}
 .dc-do{background:rgba(74,148,104,.15);color:#a0e8c0;}
-.dc-dont{background:rgba(192,80,80,.12);color:#ffb0b0;}
+.dc-dont{background:rgba(192,80,80,.13);color:#ffb8b8;}
 .dc-do::before{content:'✓';flex-shrink:0;font-weight:bold;}
 .dc-dont::before{content:'✗';flex-shrink:0;font-weight:bold;}
+
+/* マヤ暦 */
 .maya-row{display:flex;gap:10px;}
-.maya-card{flex:1;background:rgba(120,88,168,.1);border:1px solid rgba(120,88,168,.25);border-radius:10px;padding:10px;text-align:center;}
-.maya-card .mi{font-size:22px;margin-bottom:4px;}
+.maya-card{flex:1;background:rgba(120,88,168,.1);border:1px solid rgba(120,88,168,.28);border-radius:12px;padding:12px;text-align:center;}
+.maya-card .mi{font-size:24px;margin-bottom:5px;}
 .maya-card .ml{font-size:9px;color:var(--dim);letter-spacing:1px;margin-bottom:3px;}
-.maya-card .mv{font-size:12px;color:var(--purple-l);}
-.maya-card .mk{font-size:10px;color:var(--text);margin-top:4px;line-height:1.5;text-align:left;}
-.full-moon-name{background:linear-gradient(135deg,rgba(242,234,218,.08),rgba(200,168,75,.05));border:1px solid rgba(242,234,218,.18);border-radius:10px;padding:12px 14px;text-align:center;}
-.full-moon-name .fn{font-family:var(--display-font);font-size:17px;color:var(--moon);}
-.full-moon-name .fe{font-family:'IM Fell English',serif;font-style:italic;font-size:12px;color:var(--dim);margin-top:2px;}
-.full-moon-name .fd{font-size:11px;color:var(--text);margin-top:8px;line-height:1.7;}
-.flow-wrap{padding:0 16px 14px;}
-.flow-track{height:3px;background:rgba(255,255,255,.06);border-radius:2px;margin:8px 0;}
+.maya-card .mv{font-size:13px;color:var(--purple-l);}
+.maya-card .mk{font-size:11px;color:var(--text);margin-top:5px;line-height:1.6;text-align:left;}
+
+/* 満月の名前 */
+.full-moon-name{background:linear-gradient(135deg,rgba(242,234,218,.09),rgba(200,168,75,.06));border:1px solid rgba(242,234,218,.2);border-radius:12px;padding:14px 16px;text-align:center;}
+.full-moon-name .fn{font-family:var(--display-font);font-size:18px;color:var(--moon);}
+.full-moon-name .fe{font-family:'IM Fell English',serif;font-style:italic;font-size:13px;color:var(--dim);margin-top:3px;}
+.full-moon-name .fd{font-size:12px;color:var(--text);margin-top:8px;line-height:1.75;}
+
+/* 個人カード */
+.personal-card{background:linear-gradient(135deg,rgba(74,148,104,.12),rgba(120,88,168,.08));border:1px solid rgba(74,148,104,.32);border-radius:12px;padding:14px;margin-bottom:8px;}
+.personal-card .pc-title{font-family:var(--display-font);font-size:14px;color:var(--green-l);margin-bottom:7px;}
+.personal-card .pc-body{font-size:12px;color:var(--text);line-height:1.85;}
+.compat-row{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
+.compat-badge{font-size:11px;padding:4px 10px;border-radius:20px;background:rgba(74,148,104,.15);color:var(--green-l);border:1px solid rgba(74,148,104,.28);}
+
+/* フロー */
+.flow-wrap{padding:0 18px 16px;}
+.flow-track{height:4px;background:rgba(255,255,255,.07);border-radius:2px;margin:10px 0;}
 .flow-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#1a3a6a,var(--gold));transition:.5s;}
 .flow-labels{display:flex;justify-content:space-between;}
-.fl{font-size:9px;color:var(--dim);text-align:center;}
+.fl{font-size:10px;color:var(--dim);text-align:center;}
 .fl.on{color:var(--gold);}
-.personal-card{background:linear-gradient(135deg,rgba(74,148,104,.1),rgba(120,88,168,.08));border:1px solid rgba(74,148,104,.3);border-radius:12px;padding:14px;margin-bottom:8px;}
-.personal-card .pc-title{font-family:var(--display-font);font-size:13px;color:var(--green-l);margin-bottom:6px;}
-.personal-card .pc-body{font-size:11px;color:var(--text);line-height:1.8;}
-.compat-row{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
-.compat-badge{font-size:10px;padding:3px 10px;border-radius:20px;background:rgba(74,148,104,.15);color:var(--green-l);border:1px solid rgba(74,148,104,.25);}
 
-/* ══ 設定ページ ══ */
-.settings-page{padding:20px 14px;}
-.settings-title{font-family:var(--display-font);font-size:20px;color:var(--moon);margin-bottom:4px;}
-.settings-sub{font-size:11px;color:var(--dim);margin-bottom:20px;line-height:1.6;}
-.form-section{margin-bottom:22px;}
-.form-section-title{font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--border);}
-.form-group{margin-bottom:14px;}
-.form-label{font-size:11px;color:var(--dim);margin-bottom:6px;display:block;letter-spacing:1px;}
-.form-input{width:100%;background:rgba(11,16,24,.8);border:1px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--moon);font-size:14px;font-family:var(--body-font);outline:none;-webkit-appearance:none;appearance:none;transition:.2s;}
+/* スコア */
+.score-dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin:0 2px;}
+
+/* 設定ページ */
+.settings-page{padding:22px 16px;}
+.settings-title{font-family:var(--display-font);font-size:22px;color:var(--moon);margin-bottom:5px;}
+.settings-sub{font-size:12px;color:var(--dim);margin-bottom:22px;line-height:1.6;}
+.form-section{margin-bottom:24px;}
+.form-section-title{font-size:11px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:14px;padding-bottom:7px;border-bottom:1px solid var(--border);}
+.form-group{margin-bottom:16px;}
+.form-label{font-size:12px;color:var(--dim);margin-bottom:7px;display:block;letter-spacing:1px;}
+.form-input{width:100%;background:rgba(11,16,24,.85);border:1px solid var(--border);border-radius:10px;padding:13px 16px;color:var(--moon);font-size:15px;font-family:var(--body-font);outline:none;-webkit-appearance:none;appearance:none;transition:.2s;}
 .form-input:focus{border-color:var(--gold);}
 .form-input option{background:#0b1018;color:var(--moon);}
-.save-btn{width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--gold-d),var(--gold));color:var(--bg);font-size:15px;font-family:var(--display-font);letter-spacing:2px;cursor:pointer;transition:.2s;margin-top:8px;}
+.save-btn{width:100%;padding:15px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--gold-d),var(--gold));color:var(--bg);font-size:16px;font-family:var(--display-font);letter-spacing:2px;cursor:pointer;transition:.2s;margin-top:8px;}
 .save-btn:active{opacity:.8;transform:scale(.98);}
-
-/* プロフィールカード */
-.profile-card{background:linear-gradient(135deg,rgba(16,24,37,.95),rgba(10,16,24,.95));border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:20px;}
-.profile-header{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
-.profile-avatar{width:52px;height:52px;border-radius:50%;background:rgba(200,168,75,.1);border:1px solid rgba(200,168,75,.3);display:flex;align-items:center;justify-content:center;font-size:26px;}
-.profile-name{font-family:var(--display-font);font-size:18px;color:var(--moon);}
-.profile-date{font-size:11px;color:var(--dim);margin-top:2px;}
+.profile-card{background:linear-gradient(135deg,rgba(16,24,37,.97),rgba(10,16,24,.97));border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:22px;}
+.profile-header{display:flex;align-items:center;gap:16px;margin-bottom:14px;}
+.profile-avatar{width:56px;height:56px;border-radius:50%;background:rgba(200,168,75,.1);border:1px solid rgba(200,168,75,.35);display:flex;align-items:center;justify-content:center;font-size:28px;}
+.profile-name{font-family:var(--display-font);font-size:20px;color:var(--moon);}
+.profile-date{font-size:12px;color:var(--dim);margin-top:3px;}
 .profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.profile-item{background:rgba(8,12,20,.6);border:1px solid var(--border);border-radius:10px;padding:10px;}
-.profile-item .pi-label{font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:4px;}
-.profile-item .pi-val{font-size:13px;color:var(--moon);}
-.profile-item .pi-sub{font-size:10px;color:var(--dim);margin-top:2px;line-height:1.4;}
-
-/* テーマグリッド */
-.theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;}
-.theme-btn{
-  border-radius:10px;padding:10px 6px;border:1px solid var(--border);
-  cursor:pointer;text-align:center;transition:.2s;
-  font-size:10px;background:rgba(11,16,24,.6);color:var(--text);
-  font-family:var(--body-font);
-}
+.profile-item{background:rgba(8,12,20,.7);border:1px solid var(--border);border-radius:10px;padding:11px;}
+.pi-label{font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:5px;}
+.pi-val{font-size:14px;color:var(--moon);}
+.pi-sub{font-size:11px;color:var(--dim);margin-top:3px;line-height:1.4;}
+.theme-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px;}
+.theme-btn{border-radius:10px;padding:10px 6px;border:1px solid var(--border);cursor:pointer;text-align:center;transition:.2s;background:rgba(11,16,24,.7);color:var(--text);font-family:var(--body-font);}
 .theme-btn:active{transform:scale(.96);}
 .theme-btn.active{border-color:var(--gold);box-shadow:0 0 8px rgba(200,168,75,.2);}
-.theme-btn .tb-icon{font-size:20px;display:block;margin-bottom:4px;}
-.theme-btn .tb-label{font-size:9px;color:var(--dim);}
+.theme-btn .tb-icon{font-size:22px;display:block;margin-bottom:4px;}
+.theme-btn .tb-label{font-size:10px;color:var(--dim);}
 .theme-btn .tb-lock{font-size:8px;color:var(--red-l);}
-
-/* フォントグリッド */
 .font-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
-.font-btn{border-radius:10px;padding:10px 6px;border:1px solid var(--border);cursor:pointer;text-align:center;transition:.2s;background:rgba(11,16,24,.6);color:var(--text);font-size:12px;}
+.font-btn{border-radius:10px;padding:12px 6px;border:1px solid var(--border);cursor:pointer;text-align:center;transition:.2s;background:rgba(11,16,24,.7);color:var(--text);}
 .font-btn:active{transform:scale(.96);}
 .font-btn.active{border-color:var(--gold);}
-.font-btn .fb-preview{font-size:16px;display:block;margin-bottom:4px;color:var(--moon);}
-.font-btn .fb-label{font-size:9px;color:var(--dim);}
-
-/* 表示カスタマイズ */
-.toggle-list{display:flex;flex-direction:column;gap:6px;}
-.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:rgba(11,16,24,.6);border:1px solid var(--border);border-radius:10px;}
-.toggle-label{font-size:12px;color:var(--text);}
-.toggle-sub{font-size:10px;color:var(--dim);margin-top:1px;}
-.toggle{position:relative;width:40px;height:22px;flex-shrink:0;}
+.fb-preview{font-size:18px;display:block;margin-bottom:4px;color:var(--moon);}
+.fb-label{font-size:10px;color:var(--dim);}
+.toggle-list{display:flex;flex-direction:column;gap:7px;}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:rgba(11,16,24,.7);border:1px solid var(--border);border-radius:10px;}
+.toggle-label{font-size:13px;color:var(--text);}
+.toggle-sub{font-size:11px;color:var(--dim);margin-top:2px;}
+.toggle{position:relative;width:42px;height:24px;flex-shrink:0;}
 .toggle input{opacity:0;width:0;height:0;}
-.toggle-slider{position:absolute;inset:0;background:rgba(255,255,255,.1);border-radius:11px;cursor:pointer;transition:.3s;}
-.toggle-slider::before{content:'';position:absolute;width:18px;height:18px;left:2px;top:2px;background:var(--dim);border-radius:50%;transition:.3s;}
+.toggle-slider{position:absolute;inset:0;background:rgba(255,255,255,.1);border-radius:12px;cursor:pointer;transition:.3s;}
+.toggle-slider::before{content:'';position:absolute;width:20px;height:20px;left:2px;top:2px;background:var(--dim);border-radius:50%;transition:.3s;}
 .toggle input:checked+.toggle-slider{background:rgba(200,168,75,.4);}
 .toggle input:checked+.toggle-slider::before{transform:translateX(18px);background:var(--gold);}
 
 /* ボトムナビ */
-.bnav{position:fixed;bottom:0;left:0;right:0;background:rgba(6,9,15,.96);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:10px 0 max(12px,env(safe-area-inset-bottom));backdrop-filter:blur(12px);z-index:100;}
-.ni{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--dim);font-size:9px;letter-spacing:1px;cursor:pointer;padding:2px 16px;border-radius:8px;}
+.bnav{position:fixed;bottom:0;left:0;right:0;background:rgba(6,9,15,.97);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:10px 0 max(12px,env(safe-area-inset-bottom));backdrop-filter:blur(16px);z-index:100;}
+.ni{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--dim);font-size:10px;letter-spacing:1px;cursor:pointer;padding:2px 18px;border-radius:8px;}
 .ni.on{color:var(--gold);}
-.ni .ico{font-size:19px;}
-
-/* トースト */
-.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:rgba(200,168,75,.9);color:var(--bg);padding:10px 20px;border-radius:20px;font-size:12px;z-index:200;opacity:0;transition:.3s;pointer-events:none;white-space:nowrap;}
+.ni .ico{font-size:20px;}
+.toast{position:fixed;bottom:104px;left:50%;transform:translateX(-50%);background:rgba(200,168,75,.92);color:var(--bg);padding:11px 22px;border-radius:22px;font-size:13px;z-index:200;opacity:0;transition:.3s;pointer-events:none;white-space:nowrap;}
 .toast.show{opacity:1;}
 </style>
 </head>
 <body>
 <canvas id="stars"></canvas>
 
-<!-- ページ: カレンダー -->
+<!-- カレンダーページ -->
 <div class="page active" id="page-cal">
   <div class="hdr">
     <div class="hdr-eyebrow">✦ COSMIC CALENDAR ✦</div>
     <div class="month-nav">
       <button class="nav-btn" onclick="changeMonth(-1)">‹</button>
-      <div class="month-txt">
-        <div class="m" id="mLabel"></div>
-        <div class="y" id="yLabel"></div>
-      </div>
+      <div class="month-txt"><div class="m" id="mLabel"></div><div class="y" id="yLabel"></div></div>
       <button class="nav-btn" onclick="changeMonth(1)">›</button>
     </div>
   </div>
   <div class="banner">
     <div class="banner-icon" id="bIcon">🌕</div>
-    <div class="banner-info">
-      <h3 id="bName">満月</h3>
-      <p id="bDesc">フラワームーン</p>
-    </div>
-    <div class="banner-age">
-      <div class="n" id="bAge">14</div>
-      <div class="u">月齢</div>
-    </div>
+    <div class="banner-info"><h3 id="bName">満月</h3><p id="bDesc">フラワームーン</p></div>
+    <div class="banner-age"><div class="n" id="bAge">14</div><div class="u">月齢</div></div>
   </div>
   <div id="gateBanner"></div>
   <div id="gateArrowBar"></div>
@@ -392,53 +274,34 @@ body{background:var(--bg);color:var(--text);font-family:var(--body-font);font-we
   <div class="panel" id="panel"></div>
 </div>
 
-<!-- ページ: 設定 -->
+<!-- 設定ページ -->
 <div class="page" id="page-settings">
   <div class="settings-page">
     <div class="settings-title">✦ 設定</div>
     <div class="settings-sub">表示・デザイン・プロフィールをカスタマイズ</div>
-
-    <!-- プロフィール -->
     <div id="profileDisplay"></div>
     <div class="form-section">
       <div class="form-section-title">🌙 プロフィール</div>
-      <div class="form-group">
-        <label class="form-label">お名前</label>
-        <input class="form-input" id="inputName" type="text" placeholder="例：七生" maxlength="20">
-      </div>
-      <div class="form-group">
-        <label class="form-label">生年月日</label>
-        <input class="form-input" id="inputBirth" type="date" min="1920-01-01" max="2010-12-31">
-      </div>
-      <div class="form-group">
-        <label class="form-label">生まれた時間帯</label>
+      <div class="form-group"><label class="form-label">お名前</label><input class="form-input" id="inputName" type="text" placeholder="例：七生" maxlength="20"></div>
+      <div class="form-group"><label class="form-label">生年月日</label><input class="form-input" id="inputBirth" type="date" min="1920-01-01" max="2010-12-31"></div>
+      <div class="form-group"><label class="form-label">生まれた時間帯</label>
         <select class="form-input" id="inputTime">
-          <option value="">不明</option>
-          <option value="dawn">夜明け頃（4〜6時）</option>
-          <option value="morning">朝（6〜10時）</option>
-          <option value="noon">昼（10〜14時）</option>
-          <option value="afternoon">午後（14〜18時）</option>
-          <option value="evening">夕方〜夜（18〜22時）</option>
+          <option value="">不明</option><option value="dawn">夜明け頃（4〜6時）</option>
+          <option value="morning">朝（6〜10時）</option><option value="noon">昼（10〜14時）</option>
+          <option value="afternoon">午後（14〜18時）</option><option value="evening">夕方〜夜（18〜22時）</option>
           <option value="midnight">深夜（22〜4時）</option>
         </select>
       </div>
       <button class="save-btn" onclick="saveProfile()">✦ 保存</button>
     </div>
-
-    <!-- テーマ -->
     <div class="form-section">
       <div class="form-section-title">🎨 テーマ</div>
-      <div style="font-size:10px;color:var(--dim);margin-bottom:10px;">無料 3種 ／ プレミアム 9種（準備中）</div>
       <div class="theme-grid" id="themeGrid"></div>
     </div>
-
-    <!-- フォント -->
     <div class="form-section">
       <div class="form-section-title">✍️ フォント</div>
       <div class="font-grid" id="fontGrid"></div>
     </div>
-
-    <!-- 表示カスタマイズ -->
     <div class="form-section">
       <div class="form-section-title">👁 表示カスタマイズ</div>
       <div class="toggle-list" id="toggleList"></div>
@@ -446,7 +309,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--body-font);font-we
   </div>
 </div>
 
-<!-- ボトムナビ -->
 <div class="bnav">
   <div class="ni on" id="ni-cal" onclick="showPage('cal')"><span class="ico">🌙</span><span>暦</span></div>
   <div class="ni" id="ni-today" onclick="goToday()"><span class="ico">✦</span><span>今日</span></div>
@@ -455,33 +317,18 @@ body{background:var(--bg);color:var(--text);font-family:var(--body-font);font-we
 <div class="toast" id="toast"></div>
 
 <script>
-// ════════════════════════════════════
-// 星空
-// ════════════════════════════════════
+// ════ 星空 ════
 const cv=document.getElementById('stars'),cx=cv.getContext('2d');
 let stars=[];
-function initStars(){
-  cv.width=window.innerWidth;cv.height=window.innerHeight;
-  stars=Array.from({length:150},()=>({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*1.4+.2,phase:Math.random()*Math.PI*2,speed:Math.random()*.004+.001}));
-}
-function drawStars(t){
-  cx.clearRect(0,0,cv.width,cv.height);
-  stars.forEach(s=>{const a=.15+.7*Math.sin(t*s.speed+s.phase);cx.beginPath();cx.arc(s.x,s.y,s.r,0,Math.PI*2);cx.fillStyle=`rgba(200,210,230,${a})`;cx.fill();});
-  requestAnimationFrame(drawStars);
-}
+function initStars(){cv.width=window.innerWidth;cv.height=window.innerHeight;stars=Array.from({length:160},()=>({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*1.4+.2,phase:Math.random()*Math.PI*2,speed:Math.random()*.004+.001}));}
+function drawStars(t){cx.clearRect(0,0,cv.width,cv.height);stars.forEach(s=>{const a=.15+.7*Math.sin(t*s.speed+s.phase);cx.beginPath();cx.arc(s.x,s.y,s.r,0,Math.PI*2);cx.fillStyle=`rgba(200,210,230,${a})`;cx.fill();});requestAnimationFrame(drawStars);}
 initStars();requestAnimationFrame(drawStars);
 window.addEventListener('resize',initStars);
 
-// ════════════════════════════════════
-// PWA
-// ════════════════════════════════════
-let deferredPrompt=null;
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;});
+// ════ PWA ════
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
 
-// ════════════════════════════════════
-// ユーティリティ
-// ════════════════════════════════════
+// ════ ユーティリティ ════
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -492,78 +339,23 @@ function showPage(id){
 }
 function goToday(){const t=new Date();vY=t.getFullYear();vM=t.getMonth()+1;selD=t.getDate();selY=vY;selM=vM;showPage('cal');render();setTimeout(()=>document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'nearest'}),100);}
 
-// ════════════════════════════════════
-// 設定ストア
-// ════════════════════════════════════
-const DEFAULTS={
-  theme:'night', font:'elegant',
-  showMoonIcon:true, showKyureki:true, showRokuyo:true,
-  showIchiryu:true, showTensya:true, showTora:true, showMi:true,
-  showFunasoji:true, showSanrinbo:true, showGateBanner:true,
-  showGateArrow:true, showGateCell:true, showAstro:true,
-  showMaya:true, showMayaKw:true,
-};
+// ════ 設定 ════
+const DEFAULTS={theme:'night',font:'elegant',showMoonIcon:true,showKyureki:true,showRokuyo:true,showIchiryu:true,showTensya:true,showTora:true,showMi:true,showFunasoji:true,showSanrinbo:true,showGateBanner:true,showGateArrow:true,showGateCell:true,showAstro:true,showMaya:true,showMayaKw:true,showAiMessage:true};
 function getSettings(){try{return Object.assign({},DEFAULTS,JSON.parse(localStorage.getItem('cosmic_settings')||'{}'));}catch{return DEFAULTS;}}
 function saveSetting(k,v){const s=getSettings();s[k]=v;localStorage.setItem('cosmic_settings',JSON.stringify(s));render();}
 function loadProfile(){try{return JSON.parse(localStorage.getItem('cosmic_profile'));}catch{return null;}}
 
-// ════════════════════════════════════
-// テーマ・フォント
-// ════════════════════════════════════
-const THEMES=[
-  {id:'night',icon:'🌌',label:'夜空',free:true},
-  {id:'white',icon:'☀️',label:'白夜',free:true},
-  {id:'sumi',icon:'🖌️',label:'墨絵',free:true},
-  {id:'sakura',icon:'🌸',label:'桜',free:false},
-  {id:'umi',icon:'🌊',label:'海',free:false},
-  {id:'ajisai',icon:'💠',label:'紫陽花',free:false},
-  {id:'koyo',icon:'🍁',label:'紅葉',free:false},
-  {id:'yuki',icon:'❄️',label:'雪',free:false},
-  {id:'uchu',icon:'🔮',label:'宇宙',free:false},
-  {id:'anime',icon:'⚡',label:'アニメ',free:false},
-  {id:'pop',icon:'🎊',label:'ポップ',free:false},
-  {id:'mizutama',icon:'🫧',label:'水玉',free:false},
-];
-const FONTS=[
-  {id:'elegant',label:'エレガント',preview:'✦'},
-  {id:'modern',label:'モダン',preview:'◎'},
-  {id:'wa',label:'和風',preview:'月'},
-];
-function applyTheme(id){
-  document.documentElement.setAttribute('data-theme',id==='night'?'':id);
-}
-function applyFont(id){
-  document.documentElement.setAttribute('data-font',id==='elegant'?'':id);
-}
-function renderThemeGrid(){
-  const s=getSettings();
-  document.getElementById('themeGrid').innerHTML=THEMES.map(t=>`
-    <div class="theme-btn${s.theme===t.id?' active':''}" onclick="selectTheme('${t.id}','${t.free}')">
-      <span class="tb-icon">${t.icon}</span>
-      <span class="tb-label">${t.label}</span>
-      ${!t.free?'<span class="tb-lock">🔒 準備中</span>':''}
-    </div>`).join('');
-}
-function selectTheme(id,free){
-  if(free==='false'){showToast('🔒 プレミアム機能（準備中）');return;}
-  const s=getSettings();s.theme=id;localStorage.setItem('cosmic_settings',JSON.stringify(s));
-  applyTheme(id);renderThemeGrid();showToast('✦ テーマを変更しました');
-}
-function renderFontGrid(){
-  const s=getSettings();
-  document.getElementById('fontGrid').innerHTML=FONTS.map(f=>`
-    <div class="font-btn${s.font===f.id?' active':''}" onclick="selectFont('${f.id}')" style="font-family:${f.id==='elegant'?'Cinzel,serif':f.id==='modern'?'M PLUS Rounded 1c,sans-serif':'Kaisei Decol,serif'}">
-      <span class="fb-preview">${f.preview}</span>
-      <span class="fb-label">${f.label}</span>
-    </div>`).join('');
-}
-function selectFont(id){
-  const s=getSettings();s.font=id;localStorage.setItem('cosmic_settings',JSON.stringify(s));
-  applyFont(id);renderFontGrid();showToast('✦ フォントを変更しました');
-}
-
-// 表示トグル定義
+// ════ テーマ・フォント ════
+const THEMES=[{id:'night',icon:'🌌',label:'夜空',free:true},{id:'white',icon:'☀️',label:'白夜',free:true},{id:'sumi',icon:'🖌️',label:'墨絵',free:true},{id:'sakura',icon:'🌸',label:'桜',free:false},{id:'umi',icon:'🌊',label:'海',free:false},{id:'anime',icon:'⚡',label:'アニメ',free:false},{id:'pop',icon:'🎊',label:'ポップ',free:false},{id:'mizutama',icon:'🫧',label:'水玉',free:false}];
+const FONTS=[{id:'elegant',label:'エレガント',preview:'✦'},{id:'modern',label:'モダン',preview:'◎'},{id:'wa',label:'和風',preview:'月'}];
+function applyTheme(id){document.documentElement.setAttribute('data-theme',id==='night'?'':id);}
+function applyFont(id){document.documentElement.setAttribute('data-font',id==='elegant'?'':id);}
+function renderThemeGrid(){const s=getSettings();document.getElementById('themeGrid').innerHTML=THEMES.map(t=>`<div class="theme-btn${s.theme===t.id?' active':''}" onclick="selectTheme('${t.id}',${t.free})"><span class="tb-icon">${t.icon}</span><span class="tb-label">${t.label}</span>${!t.free?'<span class="tb-lock">🔒</span>':''}</div>`).join('');}
+function selectTheme(id,free){if(!free){showToast('🔒 プレミアム機能（準備中）');return;}const s=getSettings();s.theme=id;localStorage.setItem('cosmic_settings',JSON.stringify(s));applyTheme(id);renderThemeGrid();showToast('✦ テーマを変更しました');}
+function renderFontGrid(){const s=getSettings();document.getElementById('fontGrid').innerHTML=FONTS.map(f=>`<div class="font-btn${s.font===f.id?' active':''}" onclick="selectFont('${f.id}')" style="font-family:${f.id==='elegant'?'Cinzel,serif':f.id==='modern'?'M PLUS Rounded 1c,sans-serif':'Kaisei Decol,serif'}"><span class="fb-preview">${f.preview}</span><span class="fb-label">${f.label}</span></div>`).join('');}
+function selectFont(id){const s=getSettings();s.font=id;localStorage.setItem('cosmic_settings',JSON.stringify(s));applyFont(id);renderFontGrid();showToast('✦ フォントを変更しました');}
 const TOGGLES=[
+  {key:'showAiMessage',label:'🔮 AIメッセージ',sub:'毎日の個人星読みメッセージ'},
   {key:'showMoonIcon',label:'月相アイコン',sub:'セルに月相マークを表示'},
   {key:'showKyureki',label:'旧暦日付',sub:'セルに旧暦の日を表示'},
   {key:'showRokuyo',label:'六曜',sub:'大安・仏滅など'},
@@ -580,38 +372,14 @@ const TOGGLES=[
   {key:'showMaya',label:'マヤ暦',sub:'詳細パネルに表示'},
   {key:'showMayaKw',label:'マヤ暦キーワード',sub:'初心者向け解説を表示'},
 ];
-function renderToggleList(){
-  const s=getSettings();
-  document.getElementById('toggleList').innerHTML=TOGGLES.map(t=>`
-    <div class="toggle-row">
-      <div><div class="toggle-label">${t.label}</div><div class="toggle-sub">${t.sub}</div></div>
-      <label class="toggle">
-        <input type="checkbox" ${s[t.key]?'checked':''} onchange="saveSetting('${t.key}',this.checked)">
-        <span class="toggle-slider"></span>
-      </label>
-    </div>`).join('');
-}
+function renderToggleList(){const s=getSettings();document.getElementById('toggleList').innerHTML=TOGGLES.map(t=>`<div class="toggle-row"><div><div class="toggle-label">${t.label}</div><div class="toggle-sub">${t.sub}</div></div><label class="toggle"><input type="checkbox" ${s[t.key]?'checked':''} onchange="saveSetting('${t.key}',this.checked)"><span class="toggle-slider"></span></label></div>`).join('');}
+
 function renderProfileDisplay(){
-  const p=loadProfile();
-  const el=document.getElementById('profileDisplay');
+  const p=loadProfile();const el=document.getElementById('profileDisplay');
   if(!p){el.innerHTML='';return;}
   const bd=new Date(p.birth);
-  const ks=getKyuseiYear(bd);
-  const tz=getTzolkin(bd);
-  const mn=getMoonPhase(getMoonAge(bd));
-  el.innerHTML=`
-  <div class="profile-card">
-    <div class="profile-header">
-      <div class="profile-avatar">${mn.icon}</div>
-      <div><div class="profile-name">${p.name}</div><div class="profile-date">${p.birth} 生まれ</div></div>
-    </div>
-    <div class="profile-grid">
-      <div class="profile-item"><div class="pi-label">本命星</div><div class="pi-val">${ks.name}</div><div class="pi-sub">${ks.desc}</div></div>
-      <div class="profile-item"><div class="pi-label">生まれの月相</div><div class="pi-val">${mn.icon} ${mn.name}</div><div class="pi-sub">魂の原型</div></div>
-      <div class="profile-item"><div class="pi-label">ツォルキン</div><div class="pi-val">${tz.seal}</div><div class="pi-sub">音${(tz.pos%13)+1}・${tz.tone}</div></div>
-      <div class="profile-item"><div class="pi-label">ライフパス数</div><div class="pi-val">${getLifeNumber(p.birth)}</div><div class="pi-sub">数秘術</div></div>
-    </div>
-  </div>`;
+  const ks=getHonmeiStar(bd);const tz=getTzolkin(bd);const mn=getMoonPhase(getMoonAge(bd));
+  el.innerHTML=`<div class="profile-card"><div class="profile-header"><div class="profile-avatar">${mn.icon}</div><div><div class="profile-name">${p.name}</div><div class="profile-date">${p.birth} 生まれ</div></div></div><div class="profile-grid"><div class="profile-item"><div class="pi-label">本命星</div><div class="pi-val">${ks.name}</div><div class="pi-sub">${ks.desc}</div></div><div class="profile-item"><div class="pi-label">生まれの月相</div><div class="pi-val">${mn.icon} ${mn.name}</div><div class="pi-sub">魂の原型</div></div><div class="profile-item"><div class="pi-label">ツォルキン</div><div class="pi-val">${tz.seal}</div><div class="pi-sub">音${(tz.pos%13)+1}・${tz.tone}</div></div><div class="profile-item"><div class="pi-label">ライフパス数</div><div class="pi-val">${getLifeNumber(p.birth)}</div><div class="pi-sub">数秘術</div></div></div></div>`;
   document.getElementById('inputName').value=p.name||'';
   document.getElementById('inputBirth').value=p.birth||'';
   document.getElementById('inputTime').value=p.time||'';
@@ -628,55 +396,83 @@ function saveProfile(){
   setTimeout(()=>{showPage('cal');render();},1200);
 }
 
-// ════════════════════════════════════
-// 暦データ
-// ════════════════════════════════════
-const FULL_MOON_NAMES={1:{jp:'ウルフムーン',en:'Wolf Moon',desc:'冬の夜、狼の遠吠えに由来。内なる声に耳を澄ます月。静寂の中で自分の本質と向き合う時。'},2:{jp:'スノームーン',en:'Snow Moon',desc:'最も雪深い季節の満月。浄化と忍耐の月。今は蓄える時、春への準備を整えよ。'},3:{jp:'ワームムーン',en:'Worm Moon',desc:'大地が解け始め虫が目覚める満月。再生と復活のサイン。'},4:{jp:'ピンクムーン',en:'Pink Moon',desc:'春の花フロックスの色から。愛と美の季節の頂点。人間関係を深める絶好の満月。'},5:{jp:'フラワームーン',en:'Flower Moon',desc:'花が咲き誇る5月の満月。豊かさと開花の象徴。種まきしたことが花開く収穫の予兆。'},6:{jp:'ストロベリームーン',en:'Strawberry Moon',desc:'イチゴの収穫期の満月。喜びと豊穣の月。情熱と創造性が最高潮に達する時期。'},7:{jp:'バックムーン',en:'Buck Moon',desc:'牡鹿の角が生え変わる季節の満月。成長と再生の力。'},8:{jp:'スタージョンムーン',en:'Sturgeon Moon',desc:'チョウザメが豊富に獲れる季節。豊かさの象徴。ライオンズゲートのエネルギーが最高潮。'},9:{jp:'ハーベストムーン',en:'Harvest Moon',desc:'秋の収穫の月。努力の結果を刈り取る時。感謝と手放しのエネルギーが満ちる。'},10:{jp:'ハンターズムーン',en:"Hunter's Moon",desc:'狩りの季節の満月。目標に向かって一気に動く時。直感と行動力が高まる。'},11:{jp:'ビーバームーン',en:'Beaver Moon',desc:'冬に備えてビーバーが巣を作る季節。準備と蓄積の月。'},12:{jp:'コールドムーン',en:'Cold Moon',desc:'最も夜が長く冷たい満月。内省と完成の月。一年を振り返り、感謝で締めくくれ。'}};
-const GATES=[
-  {name:'ライオンズゲート',icon:'🦁',type:'lions',start:{m:7,d:26},end:{m:8,d:12},peak:{m:8,d:8},
-   desc:'シリウスが昇り、太陽が獅子座に入る期間。高次元の光が降り注ぐ聖なる門。',
-   peak_desc:'8/8ピーク。シリウス・太陽・地球が一直線。魂レベルの願いが届きやすい日。',
-   do:['瞑想・意図設定','新しいビジョンを書き出す','過去のトラウマを手放す','魂の使命を考える'],
-   dont:['決断の先延ばし','古いパターンに戻る','感情の抑圧']},
-  {name:'ブルズゲート',icon:'🐂',type:'bulls',start:{m:4,d:20},end:{m:5,d:20},peak:{m:5,d:5},
-   desc:'太陽が牡牛座に入る期間。プレアデス（昴）が輝き、豊かさと安定のエネルギーが高まる。',
-   peak_desc:'5/5プレアデス統合ピーク。豊かさの意図設定に最適。',
-   do:['土に触れる・自然の中へ','長期の資産計画','感覚を喜ばせる'],
-   dont:['性急な投資','肉体的な無理','物への執着']},
-];
-const ASTRO_EVENTS={'2026-3-20':{name:'春分',icon:'🌸',desc:'昼夜等長。新サイクルの始まり。種まきに最適。'},'2026-6-21':{name:'夏至',icon:'☀️',desc:'最も昼が長い日。太陽エネルギー最高潮。'},'2026-9-22':{name:'秋分',icon:'🍂',desc:'収穫と感謝の節目。'},'2026-12-21':{name:'冬至',icon:'❄️',desc:'最も夜が長い日。再生と内省。'},'2026-4-29':{name:'水星逆行',icon:'☿',desc:'通信・契約に注意。振り返りの期間。'},'2026-5-23':{name:'水星順行',icon:'☿',desc:'滞りが動き出す。新規スタートに適。'}};
+// ════ 暦計算 ════
+
+// ✅ 本命星計算（節分対応・正確版）
+function getHonmeiStar(birthDate){
+  const y=birthDate.getFullYear();
+  const m=birthDate.getMonth()+1;
+  const d=birthDate.getDate();
+  // 節分（2月3日）以前は前年扱い
+  let calcYear = y;
+  if(m===1||(m===2&&d<=3)) calcYear=y-1;
+  // 各桁の和を繰り返し足して1桁に
+  let sum=[...String(calcYear)].map(Number).reduce((a,b)=>a+b,0);
+  while(sum>=10) sum=[...String(sum)].map(Number).reduce((a,b)=>a+b,0);
+  // 11から引いて9で割った余り（1〜9）
+  let star=11-sum;
+  if(star>9) star-=9;
+  if(star<=0) star+=9;
+  const names=['一白水星','二黒土星','三碧木星','四緑木星','五黄土星','六白金星','七赤金星','八白土星','九紫火星'];
+  const descs=['知性・直感・水の流れ','忍耐・誠実・大地の力','行動・挑戦・雷の勢い','調和・信頼・風の縁','変革・中心・カオスと秩序','天運・精進・金の輝き','喜悦・表現・人気運','変化・革新・山の不動','直感・明晰・火の閃き'];
+  const traits=['流れに逆らわず直感を信じる','コツコツ積み上げることが財産になる','最初の一歩が人生を変える','人の縁が最大の資産','中心にいることで力を発揮する','完璧より完成。天に委ねて動く','楽しさが運を引き寄せる','どっしり構えることで道が開く','ひらめきを即行動に移す'];
+  return{name:names[star-1],desc:descs[star-1],trait:traits[star-1],num:star};
+}
+
+// 日の九星
+function getKyusei(dt){
+  const base=new Date(2000,0,7);
+  const diff=Math.floor((dt-base)/86400000);
+  const idx=((diff%9)+9)%9;
+  const names=['一白水星','二黒土星','三碧木星','四緑木星','五黄土星','六白金星','七赤金星','八白土星','九紫火星'];
+  const descs=['知性・直感・水の流れ','忍耐・誠実・大地の力','行動・挑戦・雷の勢い','調和・信頼・風の縁','変革・中心・カオスと秩序','天運・精進・金の輝き','喜悦・表現・人気運','変化・革新・山の不動','直感・明晰・火の閃き'];
+  const dos=['静かに過ごし直感を磨く','誠実に地道に。土いじりが吉','新しいことを始める。スピード勝負','人脈づくり・コミュニケーション','変化を恐れず動く。断捨離','目標設定・神社参拝','楽しいことを優先。SNS発信','基盤を整える。不動産・貯蓄の見直し','ひらめきを行動に。芸術活動'];
+  const donts=['感情的な言動','性急な変化','慎重さを欠く行動','依存・馴れ合い','執着・意固地','プライドを捨てた行動','浪費・軽率な発言','急ぎすぎた変化','論理だけで判断'];
+  return{name:names[idx],desc:descs[idx],doTxt:dos[idx],dontTxt:donts[idx],num:idx+1};
+}
+
+function getMoonAge(date){const base=new Date(2000,0,6,18,14);let age=((date-base)/86400000)%29.53059;return age<0?age+29.53059:age;}
+function getMoonPhase(age){if(age<1.5)return{icon:'🌑',name:'新月',key:'new'};if(age<6.5)return{icon:'🌒',name:'三日月',key:'waxc'};if(age<8.5)return{icon:'🌓',name:'上弦の月',key:'fq'};if(age<13.5)return{icon:'🌔',name:'十三夜',key:'waxg'};if(age<16.5)return{icon:'🌕',name:'満月',key:'full'};if(age<21.5)return{icon:'🌖',name:'十六夜',key:'wang'};if(age<23.5)return{icon:'🌗',name:'下弦の月',key:'lq'};return{icon:'🌘',name:'晦日月',key:'wanc'};}
+
+// ✅ ブルームーン検出
+function getFullMoonsInMonth(y,m){
+  const days=new Date(y,m,0).getDate();
+  const fullMoons=[];
+  for(let d=1;d<=days;d++){
+    const age=getMoonAge(new Date(y,m-1,d));
+    if(age>=14.0&&age<15.5){
+      // 前日が満月でなければ新たな満月
+      if(d===1||getMoonAge(new Date(y,m-1,d-1))<14.0){
+        fullMoons.push(d);
+      }
+    }
+  }
+  return fullMoons;
+}
+function isBlueMoon(y,m,d){
+  const fullMoons=getFullMoonsInMonth(y,m);
+  return fullMoons.length>=2&&d===fullMoons[fullMoons.length-1];
+}
+
+const FULL_MOON_NAMES={1:{jp:'ウルフムーン',en:'Wolf Moon',desc:'冬の夜、狼の遠吠えに由来。内なる声に耳を澄ます月。静寂の中で自分の本質と向き合う時。'},2:{jp:'スノームーン',en:'Snow Moon',desc:'最も雪深い季節の満月。浄化と忍耐の月。今は蓄える時、春への準備を整えよ。'},3:{jp:'ワームムーン',en:'Worm Moon',desc:'大地が解け始め虫が目覚める満月。再生と復活のサイン。'},4:{jp:'ピンクムーン',en:'Pink Moon',desc:'春の花フロックスの色から。愛と美の季節の頂点。人間関係を深める絶好の満月。'},5:{jp:'フラワームーン',en:'Flower Moon',desc:'花が咲き誇る5月の満月。豊かさと開花の象徴。種まきしたことが花開く収穫の予兆。'},6:{jp:'ストロベリームーン',en:'Strawberry Moon',desc:'イチゴの収穫期の満月。喜びと豊穣の月。情熱と創造性が最高潮。'},7:{jp:'バックムーン',en:'Buck Moon',desc:'牡鹿の角が生え変わる季節の満月。成長と再生の力。'},8:{jp:'スタージョンムーン',en:'Sturgeon Moon',desc:'ライオンズゲートのエネルギーと重なる豊かさの象徴。'},9:{jp:'ハーベストムーン',en:'Harvest Moon',desc:'秋の収穫の月。努力の結果を刈り取る時。'},10:{jp:'ハンターズムーン',en:"Hunter's Moon",desc:'目標に向かって一気に動く時。直感と行動力が高まる。'},11:{jp:'ビーバームーン',en:'Beaver Moon',desc:'冬に備える季節。準備と蓄積の月。'},12:{jp:'コールドムーン',en:'Cold Moon',desc:'最も夜が長く冷たい満月。内省と完成の月。'}};
+const BLUE_MOON={jp:'ブルームーン',en:'Blue Moon',desc:'ひと月に2回目の満月。非常に稀な天文現象。"Once in a blue moon"──滅多にないことが起きる特別な満月。強力な変容と奇跡のエネルギーが満ちている。この日に願いを込めると強力。'};
+
+const GATES=[{name:'ライオンズゲート',icon:'🦁',type:'lions',start:{m:7,d:26},end:{m:8,d:12},peak:{m:8,d:8},desc:'シリウスが昇り、太陽が獅子座に入る期間。高次元の光が降り注ぐ聖なる門。',peak_desc:'8/8ピーク。シリウス・太陽・地球が一直線。魂レベルの願いが届きやすい日。',do:['瞑想・意図設定','新しいビジョンを書き出す','過去のトラウマを手放す','魂の使命を考える'],dont:['決断の先延ばし','古いパターンに戻る','感情の抑圧']},{name:'ブルズゲート',icon:'🐂',type:'bulls',start:{m:4,d:20},end:{m:5,d:20},peak:{m:5,d:5},desc:'太陽が牡牛座に入る期間。プレアデス（昴）が輝き、豊かさのエネルギーが高まる。',peak_desc:'5/5プレアデス統合ピーク。豊かさの意図設定に最適。',do:['土に触れる・自然の中へ','長期の資産計画','感覚を喜ばせる'],dont:['性急な投資','肉体的な無理','物への執着']}];
+const ASTRO_EVENTS={'2026-3-20':{name:'春分',icon:'🌸',desc:'昼夜等長。新サイクルの始まり。'},'2026-6-21':{name:'夏至',icon:'☀️',desc:'最も昼が長い日。太陽エネルギー最高潮。'},'2026-9-22':{name:'秋分',icon:'🍂',desc:'収穫と感謝の節目。'},'2026-12-21':{name:'冬至',icon:'❄️',desc:'最も夜が長い日。再生と内省。'},'2026-4-29':{name:'水星逆行',icon:'☿',desc:'通信・契約に注意。振り返りの期間。'},'2026-5-23':{name:'水星順行',icon:'☿',desc:'滞りが動き出す。新規スタートに適。'}};
 const ICHIRYU={1:[4,5,8,16,17,20,28,29],2:[1,9,10,13,21,22,25],3:[1,9,10,13,21,22,25],4:[3,4,7,15,16,19,27,28],5:[3,4,7,15,16,19,27,28,31],6:[3,11,12,15,23,24,27],7:[2,10,11,14,22,23,26],8:[4,5,8,16,17,20,28,29],9:[1,9,10,13,21,22,25],10:[3,4,7,15,16,19,27,28,31],11:[3,11,12,15,23,24,27],12:[2,10,11,14,22,23,26]};
 const TENSYA={1:1,3:14,5:29,7:13,8:28,10:12,12:27};
 const FUNASOJI={1:[4,8,12,16,20,24,28],2:[1,5,9,13,17,21,25],3:[1,5,9,13,17,21,25,29],4:[2,6,10,14,18,22,26,30],5:[4,8,12,16,20,24,28],6:[1,5,9,13,17,21,25,29],7:[3,7,11,15,19,23,27,31],8:[4,8,12,16,20,24,28],9:[1,5,9,13,17,21,25,29],10:[3,7,11,15,19,23,27,31],11:[4,8,12,16,20,24,28],12:[2,6,10,14,18,22,26,30]};
 const SANRINBO={1:[3,15,27],2:[11,23],3:[7,19,31],4:[3,15,27],5:[11,23],6:[7,19],7:[3,15,27],8:[11,23],9:[7,19],10:[1,13,25],11:[9,21],12:[5,17,29]};
 const ROKUYO=['大安','赤口','先勝','友引','先負','仏滅'];
 const ROKUYO_INFO={'大安':{good:true,desc:'万事に大吉。六曜最強の吉日。',do:['結婚式・入籍','契約・開業','引越し'],dont:[]},'友引':{good:true,desc:'慶事に吉。午の刻を除く。',do:['結婚式','お祝い事'],dont:['葬儀・法事']},'先勝':{good:null,desc:'午前吉、午後凶。急いで吉。',do:['午前中に重要な行動を'],dont:['午後の大切な会合']},'先負':{good:null,desc:'午前凶、午後吉。静かに過ごす。',do:['午後に重要な用件を'],dont:['午前中の急ぎ仕事']},'赤口':{good:false,desc:'凶日。正午のみ吉。火・刃物注意。',do:['正午前後に重要な用件を'],dont:['新しいことを始める','火・刃物']},'仏滅':{good:false,desc:'六曜最大の凶日。万事控えるべし。',do:['断捨離・内省'],dont:['結婚式','開業・契約','引越し']}};
-const KS_NAME=['一白水星','二黒土星','三碧木星','四緑木星','五黄土星','六白金星','七赤金星','八白土星','九紫火星'];
-const KS_DESC=['知性・直感・水の流れ','忍耐・誠実・大地の力','行動・挑戦・雷の勢い','調和・信頼・風の縁','変革・中心・カオスと秩序','天運・精進・金の輝き','喜悦・表現・人気運','変化・革新・山の不動','直感・明晰・火の閃き'];
-const KS_DO=['静かに過ごし直感を磨く','誠実に地道に。土いじりが吉','新しいことを始める。スピード勝負','人脈づくり・コミュニケーション','変化を恐れず動く。断捨離','目標設定・神社参拝','楽しいことを優先。SNS発信','基盤を整える。不動産・貯蓄の見直し','ひらめきを行動に。芸術活動'];
-const KS_DONT=['感情的な言動','性急な変化','慎重さを欠く行動','依存・馴れ合い','執着・意固地','プライドを捨てた行動','浪費・軽率な発言','急ぎすぎた変化','論理だけで判断'];
 const TZOLKIN_SEALS=['赤い竜','白い風','青い夜','黄色い種','赤い蛇','白い世界の橋渡し','青い手','黄色い星','赤い月','白い犬','青い猿','黄色い人','赤いスカイウォーカー','白い魔法使い','青いワシ','黄色い戦士','赤い地球','白い鏡','青い嵐','黄色い太陽'];
 const TZOLKIN_TONES=['磁気','月','電気','自己存在','倍音','リズム','共鳴','銀河系','太陽','惑星','スペクトル','水晶','宇宙'];
-const TZOLKIN_KW={
-  '赤い竜':'命の始まり・受け取る・養育','白い風':'コミュニケーション・霊感・変容',
-  '青い夜':'豊かさ・夢・直感','黄色い種':'種まき・開花・認識',
-  '赤い蛇':'本能・情熱・生命力','白い世界の橋渡し':'死と再生・循環・赦し',
-  '青い手':'癒し・達成・知識','黄色い星':'美・芸術・調和',
-  '赤い月':'浄化・水の流れ・普遍的な愛','白い犬':'愛・忠誠心・心',
-  '青い猿':'遊び・魔法・自由','黄色い人':'自由意志・知恵・古代の力',
-  '赤いスカイウォーカー':'探求・天と地をつなぐ・冒険','白い魔法使い':'永遠の時間・受容・魅力',
-  '青いワシ':'ビジョン・創造力・精神','黄色い戦士':'知性・勇気・問いかける力',
-  '赤い地球':'進化・ナビゲーション・シンクロ','白い鏡':'反射・無限・真実',
-  '青い嵐':'変容・エネルギー・自己生成','黄色い太陽':'生命・普遍的な火・啓発',
-};
+const TZOLKIN_KW={'赤い竜':'命の始まり・受け取る・養育','白い風':'コミュニケーション・霊感・変容','青い夜':'豊かさ・夢・直感','黄色い種':'種まき・開花・認識','赤い蛇':'本能・情熱・生命力','白い世界の橋渡し':'死と再生・循環・赦し','青い手':'癒し・達成・知識','黄色い星':'美・芸術・調和','赤い月':'浄化・水の流れ・普遍的な愛','白い犬':'愛・忠誠心・心','青い猿':'遊び・魔法・自由','黄色い人':'自由意志・知恵・古代の力','赤いスカイウォーカー':'探求・天と地をつなぐ・冒険','白い魔法使い':'永遠の時間・受容・魅力','青いワシ':'ビジョン・創造力・精神','黄色い戦士':'知性・勇気・問いかける力','赤い地球':'進化・ナビゲーション・シンクロ','白い鏡':'反射・無限・真実','青い嵐':'変容・エネルギー・自己生成','黄色い太陽':'生命・普遍的な火・啓発'};
 const MOON13_NAMES=['磁気の月','月の月','電気の月','自己存在の月','倍音の月','リズムの月','共鳴の月','銀河系の月','太陽の月','惑星の月','スペクトルの月','水晶の月','宇宙の月'];
-const MOON13_KW=['意図・目的を定める','チャレンジを明確にする','サービス・奉仕の形を整える','形と機能を明確にする','力を解放・放射する','リズムと平衡を見つける','共鳴する方向性を整える','整合性・調和を確認する','意図を実現・具現化する','完璧な表現を実現する','手放し・溶解・解放する','協力・献身・普遍化する','存在の魔法・超越・祝福する'];
+const MOON13_KW=['意図・目的を定める','チャレンジを明確にする','奉仕の形を整える','形と機能を明確にする','力を解放・放射する','リズムと平衡を見つける','共鳴する方向性を整える','整合性・調和を確認する','意図を具現化する','完璧な表現を実現する','手放し・溶解・解放する','協力・献身・普遍化する','超越・祝福する'];
+const MOON_PHASE_INFO={new:{desc:'新月。エネルギーリセットの日。意図設定・新しい始まりに最強。',do:['新プロジェクトを始める','願い事リストを書く','デトックス・断食','瞑想・内省'],dont:['感情的な対立','過去にこだわる']},waxc:{desc:'月が育ち始める。蒔いた種が芽吹く兆し。',do:['コツコツした作業','学習・情報収集'],dont:['焦って大きく動く']},fq:{desc:'上弦の月。行動フェーズの中間点。壁を突破する力。',do:['困難に立ち向かう','決断と実行'],dont:['立ち止まって迷う']},waxg:{desc:'満月へ向かう高揚期。社交・発信に吉。',do:['人に会う・交流する','成果を発信する'],dont:['孤立・引きこもる']},full:{desc:'満月。感情・直感・引力が最大。見えなかったことが明らかになる。',do:['完成させる・提出する','感謝を伝える','浄化の儀式'],dont:['感情的な衝突','重要な新規スタート']},wang:{desc:'十六夜。満月の余韻。少しずつ手放すフェーズへ。',do:['成果の整理','感謝日記'],dont:['新規の大きな投資']},lq:{desc:'下弦の月。執着を手放すと次の新月への道が開く。',do:['断捨離・整理整頓','借金返済・清算'],dont:['新しいことを始める']},wanc:{desc:'晦日月。静かに待つ時。エネルギーチャージと内省。',do:['休息・睡眠','瞑想'],dont:['無理に動く','新規スタート']}};
 
 function getRokuyo(y,m,d){const base=new Date(2024,0,11);const diff=Math.round((new Date(y,m-1,d)-base)/86400000);return ROKUYO[((diff%6)+6)%6];}
-function getMoonAge(date){const base=new Date(2000,0,6,18,14);let age=((date-base)/86400000)%29.53059;return age<0?age+29.53059:age;}
-function getMoonPhase(age){if(age<1.5)return{icon:'🌑',name:'新月',key:'new'};if(age<6.5)return{icon:'🌒',name:'三日月',key:'waxc'};if(age<8.5)return{icon:'🌓',name:'上弦の月',key:'fq'};if(age<13.5)return{icon:'🌔',name:'十三夜',key:'waxg'};if(age<16.5)return{icon:'🌕',name:'満月',key:'full'};if(age<21.5)return{icon:'🌖',name:'十六夜',key:'wang'};if(age<23.5)return{icon:'🌗',name:'下弦の月',key:'lq'};return{icon:'🌘',name:'晦日月',key:'wanc'};}
-function getKyusei(dt){const base=new Date(2000,0,7);const diff=Math.floor((dt-base)/86400000);const idx=((diff%9)+9)%9;return{name:KS_NAME[idx],desc:KS_DESC[idx],doTxt:KS_DO[idx],dontTxt:KS_DONT[idx]};}
-function getKyuseiYear(dt){const y=dt.getFullYear();const idx=((((y-2000)%9)+9)%9);return{name:KS_NAME[idx],desc:KS_DESC[idx]};}
 function getTzolkin(date){const base=new Date(2020,7,1);const diff=Math.floor((date-base)/86400000);const pos=((diff%260)+260)%260;const seal=TZOLKIN_SEALS[pos%20];const tone=TZOLKIN_TONES[pos%13];return{seal,tone,pos,kw:TZOLKIN_KW[seal]||''};}
 function getMoon13(date){const base=new Date(2025,6,26);const diff=Math.floor((date-base)/86400000);const dayOfYear=((diff%364)+364)%364;if(dayOfYear>=364)return{moonName:'時間外の日',day:1,kw:''};const idx=Math.floor(dayOfYear/28);return{moonName:MOON13_NAMES[idx]||'宇宙の月',day:(dayOfYear%28)+1,kw:MOON13_KW[idx]||''};}
 function getToraDays(y,m){const base=new Date(2026,0,7);const r=[];const days=new Date(y,m,0).getDate();for(let d=1;d<=days;d++){const diff=Math.round((new Date(y,m-1,d)-base)/86400000);if(diff>=0&&diff%12===0)r.push(d);}return r;}
@@ -685,53 +481,72 @@ function getActiveGate(y,m,d){for(const g of GATES){const s=g.start,e=g.end;if((
 function isPeakDay(y,m,d){return GATES.some(g=>g.peak.m===m&&g.peak.d===d);}
 function getAstroEvent(y,m,d){return ASTRO_EVENTS[`${y}-${m}-${d}`]||null;}
 function getLifeNumber(dateStr){const digits=dateStr.replace(/-/g,'').split('').map(Number);let sum=digits.reduce((a,b)=>a+b,0);while(sum>9&&sum!==11&&sum!==22&&sum!==33)sum=[...String(sum)].map(Number).reduce((a,b)=>a+b,0);return sum;}
+function getKyurekiDay(y,m,d){const age=getMoonAge(new Date(y,m-1,d));const day=Math.floor(age)+1;return day>30?1:day;}
 
-// 旧暦計算（簡易近似）
-function getKyurekiDay(y,m,d){
-  // 朔（新月）の日を基準に旧暦1日を算出
-  const age=getMoonAge(new Date(y,m-1,d));
-  // 現在の旧暦月の1日を逆算
-  const dayOfMonth=Math.floor(age)+1;
-  return dayOfMonth>30?1:dayOfMonth;
+// ════ AIメッセージ ════
+let aiMessageCache={};
+
+async function fetchAiMessage(dt,profile,dayInfo){
+  const cacheKey=`${dt.getFullYear()}-${dt.getMonth()+1}-${dt.getDate()}-${profile?.name||''}`;
+  if(aiMessageCache[cacheKey]) return aiMessageCache[cacheKey];
+
+  const honmei=profile?getHonmeiStar(new Date(profile.birth)):null;
+  const tz=getTzolkin(dt);
+  const ph=getMoonPhase(getMoonAge(dt));
+  const ks=getKyusei(dt);
+  const lifeNum=profile?getLifeNumber(profile.birth):null;
+
+  const prompt=`あなたは「宇宙暦カレンダー」の星読みAIです。ゲッターズ飯田のような温かく鋭い占い師として、今日のメッセージを届けてください。
+
+【今日の宇宙データ】
+- 日付：${dt.getFullYear()}年${dt.getMonth()+1}月${dt.getDate()}日
+- 月相：${ph.name}（月齢${getMoonAge(dt).toFixed(1)}日）
+- 日の九星：${ks.name}
+- ツォルキン紋章：${tz.seal}・音${(tz.pos%13)+1}・${tz.tone}
+- 吉凶：${dayInfo}
+${profile?`
+【ユーザー情報】
+- 名前：${profile.name}さん
+- 本命星：${honmei.name}
+- ライフパス数：${lifeNum}
+- ツォルキン（生まれ）：${getTzolkin(new Date(profile.birth)).seal}`:''}
+
+【メッセージの構成】
+必ず以下の3部構成で、合計150〜200文字で書いてください：
+1. 「最近〜ではないですか？」というネガティブな問いかけ（その人が感じているかもしれない不安や孤独感・疲れを的確に言語化）
+2. 「でも実は〜」という宇宙的な視点からの反転・励まし
+3. 「今日は〜してみてください」という具体的な行動アドバイス（一文）
+
+口調は「ですます」調。温かく、でも核心をついた言葉で。
+JSON形式で返してください：{"neg":"〜ではないですか？","turn":"でも実は〜","action":"今日は〜してみてください"}`;
+
+  const resp=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      model:'claude-sonnet-4-20250514',
+      max_tokens:1000,
+      messages:[{role:'user',content:prompt}]
+    })
+  });
+  const data=await resp.json();
+  const text=data.content?.find(c=>c.type==='text')?.text||'';
+  try{
+    const clean=text.replace(/```json|```/g,'').trim();
+    const parsed=JSON.parse(clean);
+    aiMessageCache[cacheKey]=parsed;
+    return parsed;
+  }catch{return null;}
 }
 
-const MOON_PHASE_INFO={new:{desc:'新月。エネルギーリセットの日。意図設定・新しい始まりに最強。',do:['新プロジェクトを始める','願い事リストを書く','デトックス・断食','瞑想・内省'],dont:['感情的な対立','過去にこだわる']},waxc:{desc:'月が育ち始める。蒔いた種が芽吹く兆し。',do:['コツコツした作業','学習・情報収集'],dont:['焦って大きく動く']},fq:{desc:'上弦の月。行動フェーズの中間点。壁を突破する力。',do:['困難に立ち向かう','決断と実行'],dont:['立ち止まって迷う']},waxg:{desc:'満月へ向かう高揚期。社交・発信に吉。',do:['人に会う・交流する','成果を発信する'],dont:['孤立・引きこもる']},full:{desc:'満月。感情・直感・引力が最大。見えなかったことが明らかに。',do:['完成させる・提出する','感謝を伝える','浄化の儀式'],dont:['感情的な衝突','重要な新規スタート']},wang:{desc:'十六夜。満月の余韻。少しずつ手放すフェーズへ。',do:['成果の整理','感謝日記'],dont:['新規の大きな投資']},lq:{desc:'下弦の月。執着を手放すと次の新月への道が開く。',do:['断捨離・整理整頓','借金返済・清算'],dont:['新しいことを始める']},wanc:{desc:'晦日月。静かに待つ時。エネルギーチャージと内省。',do:['休息・睡眠','瞑想'],dont:['無理に動く','新規スタート']}};
-
-// 個人リーディング
-function getPersonalReading(dt,profile){
-  if(!profile)return null;
-  const bd=new Date(profile.birth);
-  const dayKs=getKyusei(dt);const birthKs=getKyuseiYear(bd);
-  const dayTz=getTzolkin(dt);const birthTz=getTzolkin(bd);
-  const lifeNum=getLifeNumber(profile.birth);
-  const dayPh=getMoonPhase(getMoonAge(dt));const birthPh=getMoonPhase(getMoonAge(bd));
-  const msgs=[];
-  if(dayPh.key===birthPh.key)msgs.push('生まれの月相と一致。魂が共鳴する特別な日。');
-  else if(dayPh.key==='full')msgs.push('満月があなたの感情と直感を解放する。');
-  else if(dayPh.key==='new')msgs.push('新月があなたの新しいサイクルを呼び起こす。');
-  const di=KS_NAME.indexOf(dayKs.name),bi=KS_NAME.indexOf(birthKs.name),diff=Math.abs(di-bi);
-  if(diff===0)msgs.push('本命星と一致。本来の力が最大に発揮できる日。');
-  else if(diff===4||diff===5)msgs.push('本命星と対角。変革と飛躍のチャンスが訪れる日。');
-  else if(diff<=2)msgs.push('本命星と調和。流れに乗って動くと吉。');
-  if(dayTz.seal===birthTz.seal)msgs.push(`あなたの紋章「${birthTz.seal}」の日。本来の自分で輝ける。`);
-  else if(dayTz.tone===birthTz.tone)msgs.push(`生まれの音「${birthTz.tone}」と共鳴。直感が冴える。`);
-  const lm={1:'リーダーシップを発揮して。あなたの判断が今日の鍵。',2:'調和とパートナーシップの日。誰かと組むと良い結果が生まれる。',3:'創造性と表現の日。アイデアを外に出して。',4:'基盤を固める日。コツコツとした努力が実る。',5:'自由と冒険の日。新しい体験が扉を開く。',6:'愛情・責任の日。大切な人を思いやって。',7:'内省と分析の日。答えは内側にある。',8:'豊かさと達成の日。ビジネスに積極的に動いて。',9:'完成と奉仕の日。感謝が次の扉を開く。',11:'直感と啓示の日。スピリチュアルな洞察を信じて。',22:'大きなビジョンを描く日。長期的な計画が吉。',33:'愛と奉仕の日。誰かのために動くことで運が開く。'};
-  if(lm[lifeNum])msgs.push(lm[lifeNum]);
-  return{name:profile.name,birthKs:birthKs.name,birthTz:birthTz.seal,lifeNum,msgs};
-}
-
-// ════════════════════════════════════
-// 状態
-// ════════════════════════════════════
+// ════ 状態 ════
 const today=new Date();
 let vY=today.getFullYear(),vM=today.getMonth()+1;
 let selD=today.getDate(),selY=vY,selM=vM;
 const MONTHS=['睦月','如月','弥生','卯月','皐月','水無月','文月','葉月','長月','神無月','霜月','師走'];
 function changeMonth(dir){vM+=dir;if(vM>12){vM=1;vY++;}if(vM<1){vM=12;vY--;}render();}
 
-// ════════════════════════════════════
-// レンダリング
-// ════════════════════════════════════
+// ════ レンダリング ════
 function render(){
   const s=getSettings();
   document.getElementById('mLabel').textContent=`${vM}月 · ${MONTHS[vM-1]}`;
@@ -746,24 +561,15 @@ function render(){
     gb.innerHTML=`<div class="gate-banner"><div class="gate-icon">${todayGate.icon}</div><div class="gate-info"><b>${todayGate.name}${isPeak?' ✦ ピーク':'　開催中'}</b><span>${isPeak?todayGate.peak_desc:todayGate.desc}</span></div></div>`;
   } else gb.innerHTML='';
 
-  // ゲート矢印バー（表示月にゲートがある場合）
+  // ゲート矢印バー
   const gab=document.getElementById('gateArrowBar');
-  const monthGates=GATES.filter(g=>{
-    const sm=g.start.m,em=g.end.m;
-    return vM>=sm&&vM<=em||(sm===vM||em===vM);
-  });
+  const monthGates=GATES.filter(g=>vM>=g.start.m&&vM<=g.end.m);
   if(s.showGateArrow&&monthGates.length>0){
     gab.innerHTML=monthGates.map(g=>{
       const sd=g.start.m===vM?g.start.d:1;
       const ed=g.end.m===vM?g.end.d:new Date(vY,vM,0).getDate();
-      const pd=g.peak.m===vM?`${g.peak.d}日ピーク`:'';
-      return `<div class="gate-arrow-bar">
-        <div class="gab-arrow">${g.icon}</div>
-        <div class="gab-dates">${sd}日</div>
-        <div class="gab-line">${pd?`<div class="gab-peak">✦${pd}</div>`:''}</div>
-        <div class="gab-dates">${ed}日</div>
-        <div style="font-size:11px;color:var(--dim);margin-left:4px;">${g.name}</div>
-      </div>`;
+      const pd=g.peak.m===vM?`✦${g.peak.d}日ピーク`:'';
+      return `<div class="gate-arrow-bar"><div style="font-size:16px">${g.icon}</div><div class="gab-dates">${sd}日</div><div class="gab-line">${pd?`<div class="gab-peak">${pd}</div>`:''}</div><div class="gab-dates">${ed}日</div><div style="font-size:11px;color:var(--dim);margin-left:4px;">${g.name}</div></div>`;
     }).join('');
   } else gab.innerHTML='';
 
@@ -780,13 +586,12 @@ function render(){
 
   for(let d=1;d<=daysInM;d++){
     const dt=new Date(vY,vM-1,d);
-    const age=getMoonAge(dt);
-    const phase=getMoonPhase(age);
+    const age=getMoonAge(dt);const phase=getMoonPhase(age);
     const isToday=(d===today.getDate()&&vM===today.getMonth()+1&&vY===today.getFullYear());
     const isSel=(d===selD&&vM===selM&&vY===selY);
     const gate=getActiveGate(vY,vM,d);
     const pDay=isPeakDay(vY,vM,d);
-    const astro=getAstroEvent(vY,vM,d);
+    const blueMoon=isBlueMoon(vY,vM,d);
     const kyureki=getKyurekiDay(vY,vM,d);
 
     const cell=document.createElement('div');
@@ -797,46 +602,37 @@ function render(){
     if(pDay&&s.showGateCell)cls+=' peak-day';
     cell.className=cls;
 
-    // 日数
     const dn=document.createElement('div');dn.className='dn';dn.textContent=d;cell.appendChild(dn);
 
-    // 旧暦
-    if(s.showKyureki){
-      const kr=document.createElement('div');kr.className='kyureki';
-      kr.textContent=`旧${kyureki}`;cell.appendChild(kr);
-    }
+    if(s.showKyureki){const kr=document.createElement('div');kr.className='kyureki';kr.textContent=`旧${kyureki}`;cell.appendChild(kr);}
 
-    // 月相アイコン
     if(s.showMoonIcon){
       const mi=document.createElement('div');
-      const isMainPhase=['new','fq','full','lq'].includes(phase.key);
-      const isNearPhase=['waxc','waxg','wang','wanc'].includes(phase.key);
-      if(isMainPhase){mi.className='moon-sm';mi.textContent=phase.icon;}
-      else if(isNearPhase){mi.className='moon-sm near';mi.textContent=phase.icon;}
+      const isMain=['new','fq','full','lq'].includes(phase.key);
+      const isNear=['waxc','waxg','wang','wanc'].includes(phase.key);
+      if(isMain){mi.className='moon-sm';mi.textContent=phase.icon;}
+      else if(isNear){mi.className='moon-sm near';mi.textContent=phase.icon;}
       else{mi.className='moon-sm dim';mi.textContent='·';}
       cell.appendChild(mi);
     }
 
-    // タグ
     const tags=document.createElement('div');tags.className='tags';
     const rk=getRokuyo(vY,vM,d);
-    if(s.showRokuyo&&(rk==='大安'||rk==='仏滅')){
-      tags.innerHTML+=`<span class="tg ${rk==='大安'?'tg-g':'tg-r'}">${rk}</span>`;
-    }
+    if(s.showRokuyo&&(rk==='大安'||rk==='仏滅'))tags.innerHTML+=`<span class="tg ${rk==='大安'?'tg-g':'tg-r'}">${rk}</span>`;
     if(s.showTensya&&d===tensyaD)tags.innerHTML+=`<span class="tg tg-g">天赦</span>`;
     if(s.showIchiryu&&ichList.includes(d))tags.innerHTML+=`<span class="tg tg-g">一粒</span>`;
     if(s.showTora&&toraList.includes(d))tags.innerHTML+=`<span class="tg tg-gr">寅</span>`;
     if(s.showMi&&miList.includes(d))tags.innerHTML+=`<span class="tg tg-gr">巳</span>`;
     if(s.showFunasoji&&funaList.includes(d))tags.innerHTML+=`<span class="tg tg-r">不成</span>`;
     if(s.showSanrinbo&&sanList.includes(d))tags.innerHTML+=`<span class="tg tg-r">三隣</span>`;
-    if(s.showAstro&&astro)tags.innerHTML+=`<span class="tg tg-b">${astro.icon}</span>`;
+    if(s.showAstro&&getAstroEvent(vY,vM,d))tags.innerHTML+=`<span class="tg tg-b">${getAstroEvent(vY,vM,d).icon}</span>`;
     if(pDay&&s.showGateCell)tags.innerHTML+=`<span class="tg tg-p">✦峰</span>`;
+    if(blueMoon)tags.innerHTML+=`<span class="tg tg-moon">🌕Blue</span>`;
     cell.appendChild(tags);
 
     cell.onclick=()=>{selD=d;selY=vY;selM=vM;render();setTimeout(()=>document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'nearest'}),50);};
     grid.appendChild(cell);
   }
-
   updatePanel(new Date(selY,selM-1,selD));
 }
 
@@ -846,12 +642,15 @@ function updateBanner(){
   document.getElementById('bName').textContent=ph.name;
   document.getElementById('bAge').textContent=Math.floor(age);
   const mn=FULL_MOON_NAMES[dt.getMonth()+1];
+  const blue=isBlueMoon(dt.getFullYear(),dt.getMonth()+1,dt.getDate());
   let desc=age<14.8?`満月まであと${Math.ceil(14.8-age)}日`:`新月まであと${Math.ceil(29.5-age)}日`;
-  if(ph.key==='full'&&mn)document.getElementById('bDesc').innerHTML=`${mn.jp} · ${mn.en}<br>${desc}`;
-  else document.getElementById('bDesc').textContent=desc;
+  if(ph.key==='full'){
+    const name=blue?BLUE_MOON:mn;
+    document.getElementById('bDesc').innerHTML=`${name.jp} · ${name.en}<br>${desc}`;
+  } else document.getElementById('bDesc').textContent=desc;
 }
 
-function updatePanel(dt){
+async function updatePanel(dt){
   const s=getSettings();
   const y=dt.getFullYear(),m=dt.getMonth()+1,d=dt.getDate();
   const age=getMoonAge(dt);const ph=getMoonPhase(age);
@@ -862,109 +661,142 @@ function updatePanel(dt){
   const tensyaD=TENSYA[m]||-1;
   const gate=getActiveGate(y,m,d);const isPeak=isPeakDay(y,m,d);
   const astro=getAstroEvent(y,m,d);const phInfo=MOON_PHASE_INFO[ph.key];
-  const mn=FULL_MOON_NAMES[m];
+  const blue=isBlueMoon(y,m,d);
+  const moonName=blue?BLUE_MOON:FULL_MOON_NAMES[m];
   const kyureki=getKyurekiDay(y,m,d);
   const dw=['日','月','火','水','木','金','土'][dt.getDay()];
   const profile=loadProfile();
-  const personal=getPersonalReading(dt,profile);
 
   let gs=0,bs=0;
   if(d===tensyaD)gs+=3;if(ichList.includes(d))gs+=2;if(toraList.includes(d))gs+=1;if(miList.includes(d))gs+=1;
-  if(rk==='大安')gs+=2;if(rk==='友引')gs+=1;if(isPeak)gs+=3;
+  if(rk==='大安')gs+=2;if(rk==='友引')gs+=1;if(isPeak)gs+=3;if(blue)gs+=2;
   if(funaList.includes(d))bs+=2;if(sanList.includes(d))bs+=1;if(rk==='仏滅')bs+=2;if(rk==='赤口')bs+=1;
   const score=Math.max(0,Math.min(10,5+gs-bs));
-  const dots=Array.from({length:10},(_,i)=>`<span style="display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 2px;background:${i<score?'var(--gold)':'rgba(255,255,255,.1)'};"></span>`).join('');
+  const dots=Array.from({length:10},(_,i)=>`<span class="score-dot" style="background:${i<score?'var(--gold)':'rgba(255,255,255,.1)'}"></span>`).join('');
 
   let fp=0,fi=0;
   if(age<7.4){fi=0;fp=age/7.4*25;}else if(age<14.8){fi=1;fp=25+(age-7.4)/7.4*25;}else if(age<22.1){fi=2;fp=50+(age-14.8)/7.3*25;}else{fi=3;fp=75+(age-22.1)/7.4*25;}
   const flabs=['🌑種まき期','🌓行動期','🌕開花期','🌗手放し期'];
 
   let html=`<div class="panel-head">
-    <div>
-      <div class="panel-date">${m}/${d}（${dw}）</div>
-      <div class="panel-date-sub">${y}年 · 旧暦${kyureki}日 · 月齢${age.toFixed(1)}</div>
-    </div>
+    <div><div class="panel-date">${m}/${d}（${dw}）</div><div class="panel-date-sub">${y}年 · 旧暦${kyureki}日 · 月齢${age.toFixed(1)}</div></div>
     <div class="panel-moon">${ph.icon}</div>
-    <div class="panel-moon-info"><div class="mn">${ph.name}</div><div class="ma">月齢 ${age.toFixed(1)}</div></div>
+    <div class="panel-moon-info"><div class="mn">${blue?'🌕 ブルームーン':ph.name}</div><div class="ma">月齢 ${age.toFixed(1)}</div></div>
   </div>`;
 
+  // AIメッセージセクション（プレースホルダー）
+  if(s.showAiMessage){
+    html+=`<div class="psec"><div class="psec-label">🔮 今日の星読み</div><div id="aiMessageArea"><div class="ai-loading"><div class="spinner"></div><div>宇宙からのメッセージを受信中...</div></div></div></div>`;
+  }
+
   // 個人リーディング
-  if(personal){
-    html+=`<div class="psec"><div class="psec-label">✦ ${personal.name}さんへのメッセージ</div>
-    <div class="personal-card"><div class="pc-title">今日の個人リーディング</div>
-    <div class="pc-body">${personal.msgs.map(m=>`• ${m}`).join('<br>')}</div>
-    <div class="compat-row">
-      <span class="compat-badge">本命星：${personal.birthKs}</span>
-      <span class="compat-badge">紋章：${personal.birthTz}</span>
-      <span class="compat-badge">ライフパス：${personal.lifeNum}</span>
-    </div></div></div>`;
-  } else {
-    html+=`<div class="psec"><div class="psec-label">✦ 個人リーディング</div>
-    <div style="font-size:11px;color:var(--dim);line-height:1.7;">「設定」から誕生日を登録すると<br>あなただけの宇宙メッセージが届きます。</div></div>`;
+  if(profile){
+    const honmei=getHonmeiStar(new Date(profile.birth));
+    const birthTz=getTzolkin(new Date(profile.birth));
+    const lifeNum=getLifeNumber(profile.birth);
+    const birthPh=getMoonPhase(getMoonAge(new Date(profile.birth)));
+    const msgs=[];
+    if(ph.key===birthPh.key)msgs.push('生まれの月相と一致。魂が共鳴する特別な日。');
+    else if(ph.key==='full')msgs.push('満月があなたの感情と直感を解放する。');
+    else if(ph.key==='new')msgs.push('新月があなたの新しいサイクルを呼び起こす。');
+    const di=parseInt(ks.num)-1,bi=parseInt(honmei.num)-1,diff=Math.abs(di-bi);
+    if(diff===0)msgs.push('本命星と一致。本来の力が最大に発揮できる日。');
+    else if(diff===4||diff===5)msgs.push('本命星と対角。変革と飛躍のチャンスが訪れる日。');
+    else if(diff<=2)msgs.push('本命星と調和。流れに乗って動くと吉。');
+    if(tz.seal===birthTz.seal)msgs.push(`あなたの紋章「${birthTz.seal}」の日。本来の自分で輝ける。`);
+    else if(tz.tone===birthTz.tone)msgs.push(`生まれの音「${birthTz.tone}」と共鳴。直感が冴える。`);
+    html+=`<div class="psec"><div class="psec-label">✦ ${profile.name}さんへ</div>
+    <div class="personal-card"><div class="pc-title">個人リーディング</div>
+    <div class="pc-body">${msgs.map(m=>`• ${m}`).join('<br>')}</div>
+    <div class="compat-row"><span class="compat-badge">本命星：${honmei.name}</span><span class="compat-badge">紋章：${birthTz.seal}</span><span class="compat-badge">ライフパス：${lifeNum}</span></div>
+    </div></div>`;
   }
 
   // スコア
-  html+=`<div class="psec"><div class="psec-label">Energy Score</div><div style="margin-bottom:6px;">${dots}</div>
-  <div style="font-size:11px;color:var(--dim);">${gs>bs?'✦ 吉日。積極的に動くと良い':gs===bs?'バランスの日。慎重に':'注意日。ゆっくり過ごすのが吉'}</div></div>`;
+  html+=`<div class="psec"><div class="psec-label">Energy Score</div><div style="margin-bottom:8px;">${dots}</div><div style="font-size:12px;color:var(--dim);">${gs>bs?'✦ 吉日。積極的に動くと良い':gs===bs?'バランスの日。慎重に':'注意日。ゆっくり過ごすのが吉'}</div></div>`;
 
   // マヤ暦
   if(s.showMaya){
     html+=`<div class="psec"><div class="psec-label">Maya Calendar</div><div class="maya-row">
-    <div class="maya-card"><div class="mi">🌀</div><div class="ml">TZOLKIN</div>
-    <div class="mv">${tz.seal}<br><span style="font-size:10px;color:var(--dim);">音${(tz.pos%13)+1}・${tz.tone}</span></div>
-    ${s.showMayaKw?`<div class="mk">🔑 ${tz.kw}</div>`:''}
-    </div>
-    <div class="maya-card"><div class="mi">🌙</div><div class="ml">13 MOONS</div>
-    <div class="mv">${m13.moonName}<br><span style="font-size:10px;color:var(--dim);">${m13.day}日目</span></div>
-    ${s.showMayaKw?`<div class="mk">🔑 ${m13.kw}</div>`:''}
-    </div></div></div>`;
+    <div class="maya-card"><div class="mi">🌀</div><div class="ml">TZOLKIN</div><div class="mv">${tz.seal}<br><span style="font-size:11px;color:var(--dim);">音${(tz.pos%13)+1}・${tz.tone}</span></div>${s.showMayaKw?`<div class="mk">🔑 ${tz.kw}</div>`:''}</div>
+    <div class="maya-card"><div class="mi">🌙</div><div class="ml">13 MOONS</div><div class="mv">${m13.moonName}<br><span style="font-size:11px;color:var(--dim);">${m13.day}日目</span></div>${s.showMayaKw?`<div class="mk">🔑 ${m13.kw}</div>`:''}</div>
+    </div></div>`;
   }
 
-  // 満月の名前
-  if(ph.key==='full'&&mn){
-    html+=`<div class="psec"><div class="psec-label">Full Moon</div>
-    <div class="full-moon-name"><div class="fn">${mn.jp}</div><div class="fe">${mn.en}</div><div class="fd">${mn.desc}</div></div></div>`;
+  // 満月・ブルームーンの名前
+  if(ph.key==='full'&&moonName){
+    html+=`<div class="psec"><div class="psec-label">${blue?'Blue Moon':'Full Moon'}</div>
+    <div class="full-moon-name"><div class="fn">${blue?'🌕 ':''} ${moonName.jp}</div><div class="fe">${moonName.en}</div><div class="fd">${moonName.desc}</div></div></div>`;
   }
 
   // 吉凶カード
   const cards=[];
-  if(phInfo)cards.push({type:['full','new'].includes(ph.key)?'good':'neutral',icon:ph.icon,name:ph.name+(ph.key==='full'&&mn?` — ${mn.jp}`:''),desc:phInfo.desc,dos:phInfo.do,donts:phInfo.dont});
-  if(d===tensyaD)cards.push({type:'good',icon:'✨',name:'天赦日 — 最強の吉日',desc:'天がすべての罪を赦す年に6回の最強吉日。何を始めても天の後押しが得られる。',dos:['新しいことを始める','財布の新調','神社参拝','契約・投資'],donts:['何もせず無駄に過ごす']});
-  if(ichList.includes(d))cards.push({type:'good',icon:'🌾',name:'一粒万倍日',desc:'一粒の種が万倍になる吉日。財布の新調・種まき・新規開業に最適。',dos:['新規ビジネス・口座開設','財布新調','種まき','人に奢る'],donts:['借金（万倍になる）','悪いことを始める']});
-  if(toraList.includes(d))cards.push({type:'good',icon:'🐯',name:'寅の日 — 金運の日',desc:'出て行ったものが戻ってくる。金運・旅行・出発に吉。',dos:['旅行の出発','財布の購入','お金を出すこと'],donts:['葬儀・弔事']});
-  if(miList.includes(d))cards.push({type:'good',icon:'🐍',name:'巳の日 — 弁財天縁日',desc:'弁財天の使いである蛇の日。金運・財運・芸能のエネルギーが高まる。',dos:['弁財天・神社参拝','金融機関の手続き','芸術活動'],donts:['浪費・散財']});
+  if(phInfo)cards.push({type:['full','new'].includes(ph.key)?'good':'neutral',icon:ph.icon,name:blue?'ブルームーン — 奇跡の満月':ph.name+(ph.key==='full'&&moonName?` — ${moonName.jp}`:''),desc:blue?BLUE_MOON.desc:phInfo.desc,dos:phInfo.do,donts:phInfo.dont});
+  if(d===tensyaD)cards.push({type:'good',icon:'✨',name:'天赦日 — 最強の吉日',desc:'天がすべての罪を赦す年6回の最強吉日。',dos:['新しいことを始める','財布の新調','神社参拝','契約・投資'],donts:['何もせず無駄に過ごす']});
+  if(ichList.includes(d))cards.push({type:'good',icon:'🌾',name:'一粒万倍日',desc:'一粒の種が万倍になる吉日。',dos:['新規ビジネス・口座開設','財布新調','種まき'],donts:['借金（万倍になる）','悪いことを始める']});
+  if(toraList.includes(d))cards.push({type:'good',icon:'🐯',name:'寅の日 — 金運の日',desc:'出て行ったものが戻ってくる。金運・旅行に吉。',dos:['旅行の出発','財布の購入','お金を出すこと'],donts:['葬儀・弔事']});
+  if(miList.includes(d))cards.push({type:'good',icon:'🐍',name:'巳の日 — 弁財天縁日',desc:'金運・財運・芸能のエネルギーが高まる。',dos:['弁財天・神社参拝','金融機関の手続き'],donts:['浪費・散財']});
   if(s.showRokuyo)cards.push({type:rkInfo.good===true?'good':rkInfo.good===false?'caution':'neutral',icon:rk==='大安'?'🎊':rk==='仏滅'?'🚫':rk==='友引'?'🤝':'⚖',name:`六曜 — ${rk}`,desc:rkInfo.desc,dos:rkInfo.do,donts:rkInfo.dont||[]});
-  if(funaList.includes(d))cards.push({type:'caution',icon:'⚠️',name:'不成就日',desc:'何事も成就しない凶日。物事が成立しにくい。',dos:['現状維持','内省・計画立案'],donts:['新規契約','結婚・入籍','大きな投資']});
-  if(sanList.includes(d))cards.push({type:'caution',icon:'🔨',name:'三隣亡',desc:'建築・引越しの大凶日。近隣三軒を滅ぼすとされる。',dos:['現状維持','静かに過ごす'],donts:['建築開始','引越し','大規模工事']});
+  if(funaList.includes(d))cards.push({type:'caution',icon:'⚠️',name:'不成就日',desc:'何事も成就しない凶日。',dos:['現状維持','内省・計画立案'],donts:['新規契約','結婚・入籍','大きな投資']});
+  if(sanList.includes(d))cards.push({type:'caution',icon:'🔨',name:'三隣亡',desc:'建築・引越しの大凶日。',dos:['現状維持','静かに過ごす'],donts:['建築開始','引越し']});
   if(gate)cards.push({type:'gate',icon:gate.icon,name:`${gate.name}${isPeak?' ✦ ピークデイ':''}`,desc:isPeak?gate.peak_desc:gate.desc,dos:gate.do,donts:gate.dont});
   if(astro&&s.showAstro)cards.push({type:'astro',icon:astro.icon,name:astro.name,desc:astro.desc,dos:['節目の儀式・意図設定'],donts:[]});
   cards.push({type:'neutral',icon:'⭐',name:`九星気学 — ${ks.name}`,desc:ks.desc,dos:[ks.doTxt],donts:[ks.dontTxt]});
 
   html+=`<div class="psec"><div class="psec-label">Day Reading</div><div class="day-cards">`;
   cards.forEach(c=>{
-    html+=`<div class="day-card ${c.type}"><div class="dc-icon">${c.icon}</div><div class="dc-body">
-    <div class="dc-name">${c.name}</div><div class="dc-desc">${c.desc}</div><div class="dc-actions">`;
+    html+=`<div class="day-card ${c.type}"><div class="dc-icon">${c.icon}</div><div class="dc-body"><div class="dc-name">${c.name}</div><div class="dc-desc">${c.desc}</div><div class="dc-actions">`;
     (c.dos||[]).forEach(a=>{html+=`<div class="dc-do">${a}</div>`;});
     (c.donts||[]).forEach(a=>{html+=`<div class="dc-dont">${a}</div>`;});
     html+=`</div></div></div>`;
   });
   html+=`</div></div>`;
 
-  html+=`<div class="flow-wrap"><div style="font-size:9px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:8px;">Monthly Flow</div>
-  <div class="flow-track"><div class="flow-fill" style="width:${Math.min(fp,100)}%"></div></div>
-  <div class="flow-labels">${flabs.map((l,i)=>`<div class="fl${i===fi?' on':''}">${l}</div>`).join('')}</div></div>`;
+  html+=`<div class="flow-wrap"><div style="font-size:10px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:10px;">Monthly Flow</div><div class="flow-track"><div class="flow-fill" style="width:${Math.min(fp,100)}%"></div></div><div class="flow-labels">${flabs.map((l,i)=>`<div class="fl${i===fi?' on':''}">${l}</div>`).join('')}</div></div>`;
 
   document.getElementById('panel').innerHTML=html;
+
+  // AIメッセージ非同期ロード
+  if(s.showAiMessage&&profile){
+    const dayInfoStr=[
+      ichList.includes(d)?'一粒万倍日':'',
+      d===tensyaD?'天赦日':'',
+      toraList.includes(d)?'寅の日':'',
+      funaList.includes(d)?'不成就日':'',
+      rk,gate?gate.name:'',blue?'ブルームーン':''
+    ].filter(Boolean).join('・');
+
+    try{
+      const msg=await fetchAiMessage(dt,profile,dayInfoStr||'特になし');
+      const area=document.getElementById('aiMessageArea');
+      if(area&&msg){
+        area.innerHTML=`<div class="ai-card">
+          <div class="ai-card-header"><div class="ai-card-icon">🔮</div><div><div class="ai-card-title">${profile.name}さんへ、今日の星読み</div><div class="ai-card-sub">${ph.icon} ${ph.name} · ${ks.name} · ${tz.seal}</div></div></div>
+          <div class="ai-message"><span class="neg">${msg.neg||''}</span><br><br>${msg.turn||''}<br><br><span class="pos">${msg.action||''}</span></div>
+        </div>`;
+      } else if(area){
+        area.innerHTML=`<div style="font-size:12px;color:var(--dim);padding:8px 0;">設定から誕生日を登録すると、AIが毎日あなただけのメッセージを届けます。</div>`;
+      }
+    }catch(e){
+      const area=document.getElementById('aiMessageArea');
+      if(area) area.innerHTML=`<div style="font-size:12px;color:var(--dim);padding:8px 0;">メッセージの取得に失敗しました。<button class="ai-retry" onclick="retryAiMessage()">再試行</button></div>`;
+    }
+  } else if(s.showAiMessage&&!profile){
+    const area=document.getElementById('aiMessageArea');
+    if(area) area.innerHTML=`<div style="font-size:12px;color:var(--dim);padding:8px 0;">設定から誕生日を登録すると、AIが毎日あなただけのメッセージを届けます。🔮</div>`;
+  }
 }
 
-// ════════════════════════════════════
-// 初期化
-// ════════════════════════════════════
-const initSettings=getSettings();
-applyTheme(initSettings.theme);
-applyFont(initSettings.font);
-const saved=loadProfile();
-if(saved){document.getElementById('inputName').value=saved.name||'';document.getElementById('inputBirth').value=saved.birth||'';document.getElementById('inputTime').value=saved.time||'';}
+function retryAiMessage(){
+  render();
+}
+
+// ════ 初期化 ════
+const initS=getSettings();
+applyTheme(initS.theme);
+applyFont(initS.font);
+const savedP=loadProfile();
+if(savedP){document.getElementById('inputName').value=savedP.name||'';document.getElementById('inputBirth').value=savedP.birth||'';document.getElementById('inputTime').value=savedP.time||'';}
 render();
 </script>
 </body>
